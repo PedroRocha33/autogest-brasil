@@ -50,7 +50,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       .single();
     
     if (profileData) {
-      setProfile(profileData as Profile);
+      setProfile(profileData as unknown as Profile);
     }
 
     const { data: roleData } = await supabase
