@@ -53,15 +53,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setProfile(profileData as unknown as Profile);
     }
 
-    const { data: roleData } = await supabase
+    const { data: roleData, error: roleError } = await supabase
       .from('user_roles')
       .select('role')
       .eq('user_id', userId)
-      .single();
-    
-    if (roleData) {
-      setRole(roleData.role);
+      .maybeSingle();
+
+    if (roleError && roleError.code !== 'PGRST116') {
+      console.error('Erro ao buscar role:', roleError.message);
     }
+
+    setRole(roleData?.role ?? null);
   };
 
   const refreshProfile = async () => {
