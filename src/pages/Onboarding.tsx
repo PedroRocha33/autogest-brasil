@@ -25,49 +25,21 @@ export default function Onboarding() {
     if (!user) return;
     setLoading(true);
 
-    // Create tenant
     const slug = form.name
       .toLowerCase()
       .replace(/[^a-z0-9]+/g, '-')
       .replace(/(^-|-$)/g, '');
 
-    const { data: tenant, error: tenantError } = await supabase
-      .from('tenants')
-      .insert({
-        name: form.name,
-        cnpj: form.cnpj,
-        phone: form.phone,
-        address: form.address,
-        slug,
-      })
-      .select()
-      .single();
+    const { error } = await supabase.rpc('create_tenant_onboarding', {
+      _name: form.name.trim(),
+      _cnpj: form.cnpj.trim() || null,
+      _phone: form.phone.trim() || null,
+      _address: form.address.trim() || null,
+      _slug: slug,
+    });
 
-    if (tenantError) {
-      toast.error('Erro ao criar revenda: ' + tenantError.message);
-      setLoading(false);
-      return;
-    }
-
-    // Link profile to tenant
-    const { error: profileError } = await supabase
-      .from('profiles')
-      .update({ tenant_id: tenant.id })
-      .eq('user_id', user.id);
-
-    if (profileError) {
-      toast.error('Erro ao vincular perfil: ' + profileError.message);
-      setLoading(false);
-      return;
-    }
-
-    // Assign admin role
-    const { error: roleError } = await supabase
-      .from('user_roles')
-      .insert({ user_id: user.id, role: 'admin' });
-
-    if (roleError) {
-      toast.error('Erro ao definir papel: ' + roleError.message);
+    if (error) {
+      toast.error('Erro ao criar revenda: ' + error.message);
       setLoading(false);
       return;
     }
