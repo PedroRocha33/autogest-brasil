@@ -96,6 +96,7 @@ const App = () => (
               </ProtectedRoute>
             } />
             
+            <Route path="/loja/:slug" element={<Loja />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
