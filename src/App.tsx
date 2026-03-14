@@ -9,6 +9,7 @@ import AppLayout from "@/components/AppLayout";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Onboarding from "@/pages/Onboarding";
+import Loja from "@/pages/Loja";
 import Dashboard from "@/pages/Dashboard";
 import Estoque from "@/pages/Estoque";
 import VehicleDetail from "@/pages/VehicleDetail";
