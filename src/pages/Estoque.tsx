@@ -269,7 +269,11 @@ export default function Estoque() {
                   <tr key={v.id} className="border-b border-border last:border-0 hover:bg-secondary/30 transition-colors">
                     <td className="p-3">
                       <div className="flex items-center gap-3">
-                        <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center text-lg">🚗</div>
+                         {(v.photos as string[] | null)?.[0] ? (
+                          <img src={(v.photos as string[])[0]} alt={`${v.brand} ${v.model}`} className="h-10 w-10 rounded-lg object-cover" />
+                        ) : (
+                          <div className="h-10 w-10 rounded-lg bg-secondary flex items-center justify-center text-lg">🚗</div>
+                        )}
                         <div>
                           <p className="text-sm font-medium">{v.brand} {v.model}</p>
                           {v.version && <p className="text-xs text-muted-foreground">{v.version}</p>}
