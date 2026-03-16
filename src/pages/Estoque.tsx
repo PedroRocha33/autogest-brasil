@@ -42,6 +42,8 @@ export default function Estoque() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [newVehicleId, setNewVehicleId] = useState<string | null>(null);
+  const [newVehiclePhotos, setNewVehiclePhotos] = useState<string[]>([]);
   const [form, setForm] = useState({
     brand: '', model: '', version: '', year: '', color: '', fuel: 'Flex',
     transmission: 'Manual', km: '', plate: '', cost_price: '', sale_price: '',
