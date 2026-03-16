@@ -23,6 +23,7 @@ export default function TeamManagement() {
   const [inviteForm, setInviteForm] = useState({
     name: '',
     email: '',
+    password: '',
     role: 'vendedor' as string,
     commission_rate: '5',
   });
