@@ -135,6 +135,17 @@ export default function TeamManagement() {
                 />
               </div>
               <div className="space-y-2">
+                <Label>Senha</Label>
+                <Input
+                  type="text"
+                  placeholder="Senha inicial do colaborador"
+                  value={inviteForm.password}
+                  onChange={e => setInviteForm(f => ({ ...f, password: e.target.value }))}
+                  required
+                  minLength={6}
+                />
+              </div>
+              <div className="space-y-2">
                 <Label>Cargo</Label>
                 <Select value={inviteForm.role} onValueChange={v => setInviteForm(f => ({ ...f, role: v }))}>
                   <SelectTrigger>
