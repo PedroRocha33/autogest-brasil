@@ -65,6 +65,7 @@ export default function TeamManagement() {
         body: {
           name: inviteForm.name,
           email: inviteForm.email,
+          password: inviteForm.password,
           role: inviteForm.role,
           commission_rate: parseFloat(inviteForm.commission_rate),
         },
@@ -74,7 +75,7 @@ export default function TeamManagement() {
       if (data?.error) throw new Error(data.error);
 
       toast.success(`${inviteForm.name} foi adicionado à equipe!`);
-      setInviteForm({ name: '', email: '', role: 'vendedor', commission_rate: '5' });
+      setInviteForm({ name: '', email: '', password: '', role: 'vendedor', commission_rate: '5' });
       queryClient.invalidateQueries({ queryKey: ['team-members'] });
     } catch (err: any) {
       toast.error(err.message || 'Erro ao convidar membro');
