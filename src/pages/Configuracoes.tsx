@@ -12,7 +12,8 @@ import { usePlan } from '@/hooks/usePlan';
 import TeamManagement from '@/components/TeamManagement';
 
 export default function Configuracoes() {
-  const { tenantId } = useAuth();
+  const { tenantId, role } = useAuth();
+  const { plan } = usePlan();
   const queryClient = useQueryClient();
 
   const { data: tenant } = useQuery({
