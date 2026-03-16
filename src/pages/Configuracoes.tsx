@@ -126,6 +126,11 @@ export default function Configuracoes() {
           </form>
         </CardContent>
       </Card>
+
+      {/* Team Management - only for marketplace admins */}
+      {plan === 'marketplace' && (role === 'admin' || role === 'gerente') && (
+        <TeamManagement />
+      )}
     </div>
   );
 }
