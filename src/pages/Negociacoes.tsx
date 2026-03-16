@@ -30,7 +30,9 @@ const stageColors: Record<string, string> = {
 };
 
 export default function Negociacoes() {
-  const { tenantId } = useAuth();
+  const { tenantId, user } = useAuth();
+  const { limits } = usePlan();
+  const queryClient = useQueryClient();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<any>(null);
