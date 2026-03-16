@@ -68,7 +68,7 @@ export default function Estoque() {
   const createVehicle = useMutation({
     mutationFn: async () => {
       if (!tenantId) throw new Error('No tenant');
-      const { error } = await supabase.from('vehicles').insert({
+      const { data, error } = await supabase.from('vehicles').insert({
         tenant_id: tenantId,
         brand: form.brand,
         model: form.model,
@@ -84,21 +84,41 @@ export default function Estoque() {
         min_price: parseFloat(form.min_price) || null,
         observations: form.observations || null,
         features: form.features,
-      });
+      }).select('id').single();
       if (error) throw error;
+      return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['vehicles'] });
-      setDialogOpen(false);
-      setForm({
-        brand: '', model: '', version: '', year: '', color: '', fuel: 'Flex',
-        transmission: 'Manual', km: '', plate: '', cost_price: '', sale_price: '',
-        min_price: '', observations: '', features: [],
-      });
-      toast.success('Veículo cadastrado com sucesso!');
+      setNewVehicleId(data.id);
+      toast.success('Veículo cadastrado! Agora adicione as fotos.');
     },
     onError: (err: Error) => toast.error(err.message),
   });
+
+  const handleSavePhotos = async () => {
+    if (newVehicleId && newVehiclePhotos.length > 0) {
+      await supabase.from('vehicles').update({ photos: newVehiclePhotos }).eq('id', newVehicleId);
+      queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+    }
+    setDialogOpen(false);
+    setNewVehicleId(null);
+    setNewVehiclePhotos([]);
+    setForm({
+      brand: '', model: '', version: '', year: '', color: '', fuel: 'Flex',
+      transmission: 'Manual', km: '', plate: '', cost_price: '', sale_price: '',
+      min_price: '', observations: '', features: [],
+    });
+    toast.success('Veículo salvo com sucesso!');
+  };
+
+  const handleDialogClose = (open: boolean) => {
+    if (!open && newVehicleId) {
+      handleSavePhotos();
+    } else {
+      setDialogOpen(open);
+    }
+  };
 
   const filtered = vehicles.filter((v) => {
     const matchSearch = `${v.brand} ${v.model} ${v.plate}`.toLowerCase().includes(search.toLowerCase());
