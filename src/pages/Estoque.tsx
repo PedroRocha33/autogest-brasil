@@ -36,6 +36,7 @@ const transmissions = ['Manual', 'Automático', 'CVT'];
 export default function Estoque() {
   const navigate = useNavigate();
   const { tenantId } = useAuth();
+  const { limits } = usePlan();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
