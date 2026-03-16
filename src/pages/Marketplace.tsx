@@ -44,11 +44,11 @@ const defaultFilters = {
 };
 
 export default function Marketplace() {
-  const navigate = useNavigate();
   const [vehicles, setVehicles] = useState<MarketplaceVehicle[]>([]);
   const [tenants, setTenants] = useState<MarketplaceTenant[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState(defaultFilters);
+  const [selectedVehicle, setSelectedVehicle] = useState<MarketplaceVehicle | null>(null);
 
   useEffect(() => {
     async function load() {
