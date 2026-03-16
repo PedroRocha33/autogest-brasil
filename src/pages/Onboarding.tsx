@@ -37,7 +37,8 @@ export default function Onboarding() {
       _phone: form.phone.trim() || null,
       _address: form.address.trim() || null,
       _slug: slug,
-    });
+      _city: form.city.trim() || null,
+    } as any);
 
     if (error) {
       toast.error('Erro ao criar revenda: ' + error.message);

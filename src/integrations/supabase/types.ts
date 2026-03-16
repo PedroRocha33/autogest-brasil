@@ -562,16 +562,28 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      create_tenant_onboarding: {
-        Args: {
-          _address?: string
-          _cnpj?: string
-          _name: string
-          _phone?: string
-          _slug?: string
-        }
-        Returns: string
-      }
+      create_tenant_onboarding:
+        | {
+            Args: {
+              _address?: string
+              _cnpj?: string
+              _name: string
+              _phone?: string
+              _slug?: string
+            }
+            Returns: string
+          }
+        | {
+            Args: {
+              _address?: string
+              _city?: string
+              _cnpj?: string
+              _name: string
+              _phone?: string
+              _slug?: string
+            }
+            Returns: string
+          }
       get_user_tenant_id: { Args: never; Returns: string }
       has_role: {
         Args: {
