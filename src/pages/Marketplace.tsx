@@ -52,7 +52,7 @@ export default function Marketplace() {
     async function load() {
       const { data: t } = await supabase
         .from('tenants')
-        .select('id, name, slug, city, logo_url')
+        .select('id, name, slug, city, logo_url, address, phone')
         .eq('plan', 'marketplace')
         .eq('status', 'ativo');
 
