@@ -60,10 +60,14 @@ Deno.serve(async (req) => {
       throw new Error("Recurso disponível apenas no plano Marketplace");
     }
 
-    const { email, name, role, commission_rate } = await req.json();
+    const { email, name, role, commission_rate, password } = await req.json();
 
-    if (!email || !name || !role) {
-      throw new Error("Email, nome e cargo são obrigatórios");
+    if (!email || !name || !role || !password) {
+      throw new Error("Email, nome, senha e cargo são obrigatórios");
+    }
+
+    if (password.length < 6) {
+      throw new Error("A senha deve ter no mínimo 6 caracteres");
     }
 
     if (!["vendedor", "gerente"].includes(role)) {
@@ -73,7 +77,7 @@ Deno.serve(async (req) => {
     // Create auth user
     const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
       email,
-      password: Math.random().toString(36).slice(-10) + "A1!",
+      password,
       email_confirm: true,
       user_metadata: { name },
     });

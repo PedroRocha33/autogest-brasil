@@ -23,6 +23,7 @@ export default function TeamManagement() {
   const [inviteForm, setInviteForm] = useState({
     name: '',
     email: '',
+    password: '',
     role: 'vendedor' as string,
     commission_rate: '5',
   });
@@ -64,6 +65,7 @@ export default function TeamManagement() {
         body: {
           name: inviteForm.name,
           email: inviteForm.email,
+          password: inviteForm.password,
           role: inviteForm.role,
           commission_rate: parseFloat(inviteForm.commission_rate),
         },
@@ -73,7 +75,7 @@ export default function TeamManagement() {
       if (data?.error) throw new Error(data.error);
 
       toast.success(`${inviteForm.name} foi adicionado à equipe!`);
-      setInviteForm({ name: '', email: '', role: 'vendedor', commission_rate: '5' });
+      setInviteForm({ name: '', email: '', password: '', role: 'vendedor', commission_rate: '5' });
       queryClient.invalidateQueries({ queryKey: ['team-members'] });
     } catch (err: any) {
       toast.error(err.message || 'Erro ao convidar membro');
@@ -130,6 +132,17 @@ export default function TeamManagement() {
                   value={inviteForm.email}
                   onChange={e => setInviteForm(f => ({ ...f, email: e.target.value }))}
                   required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label>Senha</Label>
+                <Input
+                  type="text"
+                  placeholder="Senha inicial do colaborador"
+                  value={inviteForm.password}
+                  onChange={e => setInviteForm(f => ({ ...f, password: e.target.value }))}
+                  required
+                  minLength={6}
                 />
               </div>
               <div className="space-y-2">
