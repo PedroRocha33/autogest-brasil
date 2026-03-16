@@ -32,6 +32,7 @@ export default function Configuracoes() {
     cnpj: '',
     phone: '',
     address: '',
+    city: '',
     slug: '',
   });
 
@@ -43,6 +44,7 @@ export default function Configuracoes() {
         cnpj: tenant.cnpj || '',
         phone: tenant.phone || '',
         address: tenant.address || '',
+        city: tenant.city || '',
         slug: tenant.slug || '',
       });
     }
@@ -56,6 +58,7 @@ export default function Configuracoes() {
         cnpj: form.cnpj || null,
         phone: form.phone || null,
         address: form.address || null,
+        city: form.city || null,
         slug: form.slug || null,
       }).eq('id', tenantId);
       if (error) throw error;
@@ -74,6 +77,7 @@ export default function Configuracoes() {
       cnpj: tenant.cnpj || '',
       phone: tenant.phone || '',
       address: tenant.address || '',
+      city: tenant.city || '',
       slug: tenant.slug || '',
     });
   }
@@ -113,6 +117,10 @@ export default function Configuracoes() {
             <div className="space-y-2">
               <Label>Endereço</Label>
               <Input value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} />
+            </div>
+            <div className="space-y-2">
+              <Label>Cidade</Label>
+              <Input value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))} placeholder="Ex: Criciúma" />
             </div>
             <div className="space-y-2">
               <Label>Slug (URL pública)</Label>

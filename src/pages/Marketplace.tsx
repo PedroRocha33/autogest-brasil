@@ -27,6 +27,8 @@ interface MarketplaceTenant {
   slug: string | null;
   city: string | null;
   logo_url: string | null;
+  address: string | null;
+  phone: string | null;
 }
 
 const defaultFilters = {
@@ -52,7 +54,7 @@ export default function Marketplace() {
     async function load() {
       const { data: t } = await supabase
         .from('tenants')
-        .select('id, name, slug, city, logo_url')
+        .select('id, name, slug, city, logo_url, address, phone')
         .eq('plan', 'marketplace')
         .eq('status', 'ativo');
 

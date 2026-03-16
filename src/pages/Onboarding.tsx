@@ -18,6 +18,7 @@ export default function Onboarding() {
     cnpj: '',
     phone: '',
     address: '',
+    city: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -36,7 +37,8 @@ export default function Onboarding() {
       _phone: form.phone.trim() || null,
       _address: form.address.trim() || null,
       _slug: slug,
-    });
+      _city: form.city.trim() || null,
+    } as any);
 
     if (error) {
       toast.error('Erro ao criar revenda: ' + error.message);
@@ -96,9 +98,18 @@ export default function Onboarding() {
               <Label htmlFor="address">Endereço</Label>
               <Input
                 id="address"
-                placeholder="Av. Paulista, 1000 - São Paulo, SP"
+                placeholder="Av. Paulista, 1000"
                 value={form.address}
                 onChange={(e) => setForm(f => ({ ...f, address: e.target.value }))}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="city">Cidade</Label>
+              <Input
+                id="city"
+                placeholder="Ex: Criciúma"
+                value={form.city}
+                onChange={(e) => setForm(f => ({ ...f, city: e.target.value }))}
               />
             </div>
             <Button type="submit" className="w-full" disabled={loading}>

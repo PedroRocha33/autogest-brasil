@@ -23,6 +23,8 @@ interface Tenant {
   slug: string | null;
   city: string | null;
   logo_url: string | null;
+  address: string | null;
+  phone: string | null;
 }
 
 interface Props {
@@ -118,6 +120,11 @@ export default function MarketplaceVehicleCard({ vehicle: v, tenant, onClick }: 
               </span>
             )}
           </div>
+        )}
+        {tenant?.address && (
+          <p className="text-[10px] text-muted-foreground truncate">
+            {tenant.address}
+          </p>
         )}
       </CardContent>
     </Card>
