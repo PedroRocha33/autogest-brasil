@@ -223,7 +223,7 @@ export default function Estoque() {
             </form>
           </DialogContent>
         </Dialog>
-      </div>
+        )}
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">

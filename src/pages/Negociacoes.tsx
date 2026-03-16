@@ -156,49 +156,79 @@ export default function Negociacoes() {
         </Dialog>
       </div>
 
-      {/* Kanban Board */}
-      <div className="flex gap-4 overflow-x-auto pb-4">
-        {stages.map(stage => {
-          const stageDeals = deals.filter(d => d.stage === stage);
-          return (
-            <div key={stage} className="min-w-[260px] flex-shrink-0">
-              <div className="flex items-center gap-2 mb-3">
-                <Badge className={`text-xs ${stageColors[stage]}`}>{stage}</Badge>
-                <span className="text-xs text-muted-foreground">{stageDeals.length}</span>
+      {/* Kanban Board or Simple List based on plan */}
+      {limits.kanban ? (
+        <div className="flex gap-4 overflow-x-auto pb-4">
+          {stages.map(stage => {
+            const stageDeals = deals.filter(d => d.stage === stage);
+            return (
+              <div key={stage} className="min-w-[260px] flex-shrink-0">
+                <div className="flex items-center gap-2 mb-3">
+                  <Badge className={`text-xs ${stageColors[stage]}`}>{stage}</Badge>
+                  <span className="text-xs text-muted-foreground">{stageDeals.length}</span>
+                </div>
+                <div className="space-y-2">
+                  {stageDeals.map(deal => (
+                    <Card
+                      key={deal.id}
+                      className="bg-card border-border hover:border-primary/30 cursor-pointer transition-all hover:-translate-y-0.5"
+                      onClick={() => setSelectedDeal(deal)}
+                    >
+                      <CardContent className="p-3 space-y-2">
+                        <div className="flex items-center gap-2">
+                          <div className="h-7 w-7 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary">
+                            {deal.clients?.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2) || '??'}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <p className="text-sm font-medium truncate">{deal.clients?.name || 'Sem cliente'}</p>
+                            <p className="text-xs text-muted-foreground truncate">
+                              {deal.vehicles ? `${deal.vehicles.brand} ${deal.vehicles.model}` : 'Sem veículo'}
+                            </p>
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-heading font-semibold">
+                            {deal.asking_price ? `R$ ${Number(deal.asking_price).toLocaleString('pt-BR')}` : '—'}
+                          </span>
+                          <span className="text-[10px] text-muted-foreground">{daysSince(deal.created_at)}d</span>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
               </div>
-              <div className="space-y-2">
-                {stageDeals.map(deal => (
-                  <Card
-                    key={deal.id}
-                    className="bg-card border-border hover:border-primary/30 cursor-pointer transition-all hover:-translate-y-0.5"
-                    onClick={() => setSelectedDeal(deal)}
-                  >
-                    <CardContent className="p-3 space-y-2">
-                      <div className="flex items-center gap-2">
-                        <div className="h-7 w-7 rounded-full bg-primary/20 flex items-center justify-center text-[10px] font-bold text-primary">
-                          {deal.clients?.name?.split(' ').map((n: string) => n[0]).join('').slice(0, 2) || '??'}
-                        </div>
-                        <div className="min-w-0 flex-1">
-                          <p className="text-sm font-medium truncate">{deal.clients?.name || 'Sem cliente'}</p>
-                          <p className="text-xs text-muted-foreground truncate">
-                            {deal.vehicles ? `${deal.vehicles.brand} ${deal.vehicles.model}` : 'Sem veículo'}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <span className="text-sm font-heading font-semibold">
-                          {deal.asking_price ? `R$ ${Number(deal.asking_price).toLocaleString('pt-BR')}` : '—'}
-                        </span>
-                        <span className="text-[10px] text-muted-foreground">{daysSince(deal.created_at)}d</span>
-                      </div>
-                    </CardContent>
-                  </Card>
+            );
+          })}
+        </div>
+      ) : (
+        /* Simple List for basic plan */
+        <Card className="bg-card border-border overflow-hidden">
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-border">
+                  <th className="text-left text-xs text-muted-foreground p-3">Cliente</th>
+                  <th className="text-left text-xs text-muted-foreground p-3">Veículo</th>
+                  <th className="text-left text-xs text-muted-foreground p-3">Valor</th>
+                  <th className="text-left text-xs text-muted-foreground p-3">Etapa</th>
+                  <th className="text-left text-xs text-muted-foreground p-3">Dias</th>
+                </tr>
+              </thead>
+              <tbody>
+                {deals.map(deal => (
+                  <tr key={deal.id} className="border-b border-border last:border-0 hover:bg-secondary/30 cursor-pointer" onClick={() => setSelectedDeal(deal)}>
+                    <td className="p-3 text-sm">{deal.clients?.name || 'Sem cliente'}</td>
+                    <td className="p-3 text-sm">{deal.vehicles ? `${deal.vehicles.brand} ${deal.vehicles.model}` : '—'}</td>
+                    <td className="p-3 text-sm font-heading font-semibold">{deal.asking_price ? `R$ ${Number(deal.asking_price).toLocaleString('pt-BR')}` : '—'}</td>
+                    <td className="p-3"><Badge className={`text-xs ${stageColors[deal.stage]}`}>{deal.stage}</Badge></td>
+                    <td className="p-3 text-sm text-muted-foreground">{daysSince(deal.created_at)}d</td>
+                  </tr>
                 ))}
-              </div>
-            </div>
-          );
-        })}
-      </div>
+              </tbody>
+            </table>
+          </div>
+        </Card>
+      )}
 
       {/* Deal Detail Sheet */}
       <Sheet open={!!selectedDeal} onOpenChange={() => setSelectedDeal(null)}>

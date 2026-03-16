@@ -55,6 +55,21 @@ const itensList = ['Chave reserva', 'Manual', 'Triângulo', 'Macaco', 'Chave de 
 
 export default function Vistorias() {
   const { tenantId } = useAuth();
+  const { limits } = usePlan();
+
+  if (!limits.vistorias) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-heading font-bold">Vistorias</h1>
+        <UpgradeCard
+          title="Vistorias bloqueadas"
+          description="Vistorias completas com checklist, mapa de avarias e fotos estão disponíveis a partir do plano Profissional."
+        />
+      </div>
+    );
+  }
+
+  const { tenantId } = useAuth();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [checklist, setChecklist] = useState<Record<string, Record<string, string>>>({});

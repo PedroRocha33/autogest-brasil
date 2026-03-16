@@ -25,6 +25,21 @@ const serviceTypes = ['Funilaria', 'Pintura', 'Mecânica', 'Elétrica', 'Estéti
 
 export default function Servicos() {
   const { tenantId } = useAuth();
+  const { limits } = usePlan();
+
+  if (!limits.servicos) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-heading font-bold">Serviços</h1>
+        <UpgradeCard
+          title="Serviços bloqueados"
+          description="Ordens de serviço com controle de mecânicos e custos estão disponíveis a partir do plano Profissional."
+        />
+      </div>
+    );
+  }
+
+  const { tenantId } = useAuth();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState({

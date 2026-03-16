@@ -18,6 +18,8 @@ const categories = ['Venda de veículo', 'Compra de veículo', 'Serviço', 'Desp
 
 export default function Financeiro() {
   const { tenantId } = useAuth();
+  const { limits } = usePlan();
+  const queryClient = useQueryClient();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [typeFilter, setTypeFilter] = useState('all');

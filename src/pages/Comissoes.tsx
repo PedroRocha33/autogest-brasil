@@ -8,6 +8,20 @@ import UpgradeCard from '@/components/UpgradeCard';
 
 export default function Comissoes() {
   const { tenantId } = useAuth();
+  const { limits } = usePlan();
+
+  if (!limits.comissoes) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-heading font-bold">Comissões</h1>
+        <UpgradeCard
+          title="Comissões bloqueadas"
+          description="Controle de comissões por vendedor está disponível a partir do plano Profissional."
+        />
+      </div>
+    );
+  }
+
 
   const { data: commissions = [], isLoading } = useQuery({
     queryKey: ['commissions', tenantId],
