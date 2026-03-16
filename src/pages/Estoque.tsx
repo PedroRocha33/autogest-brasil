@@ -121,6 +121,13 @@ export default function Estoque() {
           <h1 className="text-2xl font-heading font-bold">Estoque</h1>
           <p className="text-muted-foreground text-sm">{vehicles.length} veículos cadastrados</p>
         </div>
+        {/* Vehicle limit check */}
+        {vehicles.length >= limits.maxVehicles ? (
+          <UpgradeCard
+            title="Limite de veículos atingido"
+            description={`Você atingiu o limite de ${limits.maxVehicles} veículos do plano Básico. Faça upgrade para o Profissional e cadastre veículos ilimitados, adicione fotos ilimitadas e desbloqueie vistorias, comissões e muito mais.`}
+          />
+        ) : (
         <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
           <DialogTrigger asChild>
             <Button><Plus className="mr-2 h-4 w-4" />Cadastrar Veículo</Button>
