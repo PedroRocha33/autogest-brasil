@@ -58,6 +58,7 @@ export default function Configuracoes() {
         cnpj: form.cnpj || null,
         phone: form.phone || null,
         address: form.address || null,
+        city: form.city || null,
         slug: form.slug || null,
       }).eq('id', tenantId);
       if (error) throw error;
