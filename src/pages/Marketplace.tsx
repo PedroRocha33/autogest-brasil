@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { Car, TrendingUp, Shield, Store } from 'lucide-react';
 import MarketplaceHeader from '@/components/marketplace/MarketplaceHeader';
 import MarketplaceFilters from '@/components/marketplace/MarketplaceFilters';
 import MarketplaceVehicleCard from '@/components/marketplace/MarketplaceVehicleCard';
+import MarketplaceVehicleDialog from '@/components/marketplace/MarketplaceVehicleDialog';
 
 interface MarketplaceVehicle {
   id: string;
@@ -44,11 +44,11 @@ const defaultFilters = {
 };
 
 export default function Marketplace() {
-  const navigate = useNavigate();
   const [vehicles, setVehicles] = useState<MarketplaceVehicle[]>([]);
   const [tenants, setTenants] = useState<MarketplaceTenant[]>([]);
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState(defaultFilters);
+  const [selectedVehicle, setSelectedVehicle] = useState<MarketplaceVehicle | null>(null);
 
   useEffect(() => {
     async function load() {
@@ -206,19 +206,28 @@ export default function Marketplace() {
             <p className="text-sm text-muted-foreground">Tente ajustar os filtros para ver mais resultados.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filtered.map(v => {
-              const tenant = getTenant(v.tenant_id);
-              return (
-                <MarketplaceVehicleCard
-                  key={v.id}
-                  vehicle={v}
-                  tenant={tenant}
-                  onClick={() => tenant?.slug ? navigate(`/loja/${tenant.slug}`) : undefined}
-                />
-              );
-            })}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filtered.map(v => {
+                const tenant = getTenant(v.tenant_id);
+                return (
+                  <MarketplaceVehicleCard
+                    key={v.id}
+                    vehicle={v}
+                    tenant={tenant}
+                    onClick={() => setSelectedVehicle(v)}
+                  />
+                );
+              })}
+            </div>
+
+            <MarketplaceVehicleDialog
+              vehicle={selectedVehicle}
+              tenant={selectedVehicle ? getTenant(selectedVehicle.tenant_id) : undefined}
+              open={!!selectedVehicle}
+              onOpenChange={(open) => { if (!open) setSelectedVehicle(null); }}
+            />
+          </>
         )}
       </section>
 
