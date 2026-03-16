@@ -10,6 +10,21 @@ export default function Comissoes() {
   const { tenantId } = useAuth();
   const { limits } = usePlan();
 
+  const { data: commissions = [], isLoading } = useQuery({
+    queryKey: ['commissions', tenantId],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      const { data, error } = await supabase
+        .from('commissions')
+        .select('*, deals(vehicles(brand, model))')
+        .eq('tenant_id', tenantId)
+        .order('paid_at', { ascending: false });
+      if (error) throw error;
+      return data;
+    },
+    enabled: !!tenantId,
+  });
+
   if (!limits.comissoes) {
     return (
       <div className="space-y-6">
@@ -21,9 +36,6 @@ export default function Comissoes() {
       </div>
     );
   }
-
-
-  const { data: commissions = [], isLoading } = useQuery({
     queryKey: ['commissions', tenantId],
     queryFn: async () => {
       if (!tenantId) return [];
