@@ -206,26 +206,28 @@ export default function Marketplace() {
             <p className="text-sm text-muted-foreground">Tente ajustar os filtros para ver mais resultados.</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-            {filtered.map(v => {
-              const tenant = getTenant(v.tenant_id);
-              return (
-                <MarketplaceVehicleCard
-                  key={v.id}
-                  vehicle={v}
-                  tenant={tenant}
-                  onClick={() => setSelectedVehicle(v)}
-                />
-              );
-            })}
-          </div>
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filtered.map(v => {
+                const tenant = getTenant(v.tenant_id);
+                return (
+                  <MarketplaceVehicleCard
+                    key={v.id}
+                    vehicle={v}
+                    tenant={tenant}
+                    onClick={() => setSelectedVehicle(v)}
+                  />
+                );
+              })}
+            </div>
 
-          <MarketplaceVehicleDialog
-            vehicle={selectedVehicle}
-            tenant={selectedVehicle ? getTenant(selectedVehicle.tenant_id) : undefined}
-            open={!!selectedVehicle}
-            onOpenChange={(open) => { if (!open) setSelectedVehicle(null); }}
-          />
+            <MarketplaceVehicleDialog
+              vehicle={selectedVehicle}
+              tenant={selectedVehicle ? getTenant(selectedVehicle.tenant_id) : undefined}
+              open={!!selectedVehicle}
+              onOpenChange={(open) => { if (!open) setSelectedVehicle(null); }}
+            />
+          </>
         )}
       </section>
 
