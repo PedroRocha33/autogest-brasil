@@ -34,8 +34,7 @@ export default function Comissoes() {
           description="Controle de comissões por vendedor está disponível a partir do plano Profissional."
         />
       </div>
-    );
-
+  }
 
 
   return (
