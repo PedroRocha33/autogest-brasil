@@ -142,6 +142,18 @@ export default function Vistorias() {
     }
   };
 
+  if (!limits.vistorias) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-heading font-bold">Vistorias</h1>
+        <UpgradeCard
+          title="Vistorias bloqueadas"
+          description="Vistorias completas com checklist, mapa de avarias e fotos estão disponíveis a partir do plano Profissional."
+        />
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
