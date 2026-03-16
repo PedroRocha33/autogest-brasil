@@ -214,11 +214,18 @@ export default function Marketplace() {
                   key={v.id}
                   vehicle={v}
                   tenant={tenant}
-                  onClick={() => tenant?.slug ? navigate(`/loja/${tenant.slug}`) : undefined}
+                  onClick={() => setSelectedVehicle(v)}
                 />
               );
             })}
           </div>
+
+          <MarketplaceVehicleDialog
+            vehicle={selectedVehicle}
+            tenant={selectedVehicle ? getTenant(selectedVehicle.tenant_id) : undefined}
+            open={!!selectedVehicle}
+            onOpenChange={(open) => { if (!open) setSelectedVehicle(null); }}
+          />
         )}
       </section>
 
