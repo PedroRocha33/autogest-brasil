@@ -3,6 +3,8 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
+import { usePlan } from '@/hooks/usePlan';
+import UpgradeCard from '@/components/UpgradeCard';
 
 export default function Comissoes() {
   const { tenantId } = useAuth();
