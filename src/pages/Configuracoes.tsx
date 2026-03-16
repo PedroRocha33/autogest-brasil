@@ -8,6 +8,8 @@ import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Building2, Save } from 'lucide-react';
+import { usePlan } from '@/hooks/usePlan';
+import TeamManagement from '@/components/TeamManagement';
 
 export default function Configuracoes() {
   const { tenantId } = useAuth();
