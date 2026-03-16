@@ -147,14 +147,31 @@ export default function Estoque() {
         {vehicles.length >= limits.maxVehicles ? (
           <div />
         ) : (
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
             <DialogTrigger asChild>
               <Button><Plus className="mr-2 h-4 w-4" />Cadastrar Veículo</Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle className="font-heading">Novo Veículo</DialogTitle>
+                <DialogTitle className="font-heading">
+                  {newVehicleId ? 'Adicionar Fotos' : 'Novo Veículo'}
+                </DialogTitle>
               </DialogHeader>
+
+              {newVehicleId && tenantId ? (
+                <div className="space-y-4">
+                  <PhotoUploader
+                    vehicleId={newVehicleId}
+                    tenantId={tenantId}
+                    existingPhotos={newVehiclePhotos}
+                    maxPhotos={limits.maxPhotosPerVehicle}
+                    onPhotosChange={setNewVehiclePhotos}
+                  />
+                  <Button onClick={handleSavePhotos} className="w-full">
+                    Concluir Cadastro
+                  </Button>
+                </div>
+              ) : (
               <form onSubmit={(e) => { e.preventDefault(); createVehicle.mutate(); }} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
