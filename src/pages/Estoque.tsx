@@ -16,6 +16,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { usePlan } from '@/hooks/usePlan';
 import UpgradeCard from '@/components/UpgradeCard';
+import PhotoUploader from '@/components/PhotoUploader';
 
 const statusColors: Record<string, string> = {
   'Disponível': 'bg-success/20 text-success',
@@ -41,6 +42,8 @@ export default function Estoque() {
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [newVehicleId, setNewVehicleId] = useState<string | null>(null);
+  const [newVehiclePhotos, setNewVehiclePhotos] = useState<string[]>([]);
   const [form, setForm] = useState({
     brand: '', model: '', version: '', year: '', color: '', fuel: 'Flex',
     transmission: 'Manual', km: '', plate: '', cost_price: '', sale_price: '',
@@ -65,7 +68,7 @@ export default function Estoque() {
   const createVehicle = useMutation({
     mutationFn: async () => {
       if (!tenantId) throw new Error('No tenant');
-      const { error } = await supabase.from('vehicles').insert({
+      const { data, error } = await supabase.from('vehicles').insert({
         tenant_id: tenantId,
         brand: form.brand,
         model: form.model,
@@ -81,21 +84,41 @@ export default function Estoque() {
         min_price: parseFloat(form.min_price) || null,
         observations: form.observations || null,
         features: form.features,
-      });
+      }).select('id').single();
       if (error) throw error;
+      return data;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['vehicles'] });
-      setDialogOpen(false);
-      setForm({
-        brand: '', model: '', version: '', year: '', color: '', fuel: 'Flex',
-        transmission: 'Manual', km: '', plate: '', cost_price: '', sale_price: '',
-        min_price: '', observations: '', features: [],
-      });
-      toast.success('Veículo cadastrado com sucesso!');
+      setNewVehicleId(data.id);
+      toast.success('Veículo cadastrado! Agora adicione as fotos.');
     },
     onError: (err: Error) => toast.error(err.message),
   });
+
+  const handleSavePhotos = async () => {
+    if (newVehicleId && newVehiclePhotos.length > 0) {
+      await supabase.from('vehicles').update({ photos: newVehiclePhotos }).eq('id', newVehicleId);
+      queryClient.invalidateQueries({ queryKey: ['vehicles'] });
+    }
+    setDialogOpen(false);
+    setNewVehicleId(null);
+    setNewVehiclePhotos([]);
+    setForm({
+      brand: '', model: '', version: '', year: '', color: '', fuel: 'Flex',
+      transmission: 'Manual', km: '', plate: '', cost_price: '', sale_price: '',
+      min_price: '', observations: '', features: [],
+    });
+    toast.success('Veículo salvo com sucesso!');
+  };
+
+  const handleDialogClose = (open: boolean) => {
+    if (!open && newVehicleId) {
+      handleSavePhotos();
+    } else {
+      setDialogOpen(open);
+    }
+  };
 
   const filtered = vehicles.filter((v) => {
     const matchSearch = `${v.brand} ${v.model} ${v.plate}`.toLowerCase().includes(search.toLowerCase());
@@ -124,14 +147,31 @@ export default function Estoque() {
         {vehicles.length >= limits.maxVehicles ? (
           <div />
         ) : (
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+          <Dialog open={dialogOpen} onOpenChange={handleDialogClose}>
             <DialogTrigger asChild>
               <Button><Plus className="mr-2 h-4 w-4" />Cadastrar Veículo</Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
               <DialogHeader>
-                <DialogTitle className="font-heading">Novo Veículo</DialogTitle>
+                <DialogTitle className="font-heading">
+                  {newVehicleId ? 'Adicionar Fotos' : 'Novo Veículo'}
+                </DialogTitle>
               </DialogHeader>
+
+              {newVehicleId && tenantId ? (
+                <div className="space-y-4">
+                  <PhotoUploader
+                    vehicleId={newVehicleId}
+                    tenantId={tenantId}
+                    existingPhotos={newVehiclePhotos}
+                    maxPhotos={limits.maxPhotosPerVehicle}
+                    onPhotosChange={setNewVehiclePhotos}
+                  />
+                  <Button onClick={handleSavePhotos} className="w-full">
+                    Concluir Cadastro
+                  </Button>
+                </div>
+              ) : (
               <form onSubmit={(e) => { e.preventDefault(); createVehicle.mutate(); }} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
                   <div className="space-y-2">
@@ -214,9 +254,10 @@ export default function Estoque() {
                 </div>
 
                 <Button type="submit" className="w-full" disabled={createVehicle.isPending}>
-                  {createVehicle.isPending ? 'Salvando...' : 'Cadastrar Veículo'}
+                  {createVehicle.isPending ? 'Salvando...' : 'Próximo: Adicionar Fotos'}
                 </Button>
               </form>
+              )}
             </DialogContent>
           </Dialog>
         )}
