@@ -2,7 +2,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { Navigate, useLocation } from 'react-router-dom';
 
 export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { session, profile, loading } = useAuth();
+  const { session, profile, role, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
