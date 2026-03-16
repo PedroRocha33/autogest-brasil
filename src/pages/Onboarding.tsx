@@ -18,6 +18,7 @@ export default function Onboarding() {
     cnpj: '',
     phone: '',
     address: '',
+    city: '',
   });
 
   const handleSubmit = async (e: React.FormEvent) => {

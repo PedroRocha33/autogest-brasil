@@ -32,6 +32,7 @@ export default function Configuracoes() {
     cnpj: '',
     phone: '',
     address: '',
+    city: '',
     slug: '',
   });
 
