@@ -121,6 +121,11 @@ export default function MarketplaceVehicleCard({ vehicle: v, tenant, onClick }: 
             )}
           </div>
         )}
+        {tenant?.address && (
+          <p className="text-[10px] text-muted-foreground truncate">
+            {tenant.address}
+          </p>
+        )}
       </CardContent>
     </Card>
   );

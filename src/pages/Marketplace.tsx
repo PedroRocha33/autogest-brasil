@@ -27,6 +27,8 @@ interface MarketplaceTenant {
   slug: string | null;
   city: string | null;
   logo_url: string | null;
+  address: string | null;
+  phone: string | null;
 }
 
 const defaultFilters = {

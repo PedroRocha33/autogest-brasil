@@ -119,6 +119,10 @@ export default function Configuracoes() {
               <Input value={form.address} onChange={e => setForm(f => ({ ...f, address: e.target.value }))} />
             </div>
             <div className="space-y-2">
+              <Label>Cidade</Label>
+              <Input value={form.city} onChange={e => setForm(f => ({ ...f, city: e.target.value }))} placeholder="Ex: Criciúma" />
+            </div>
+            <div className="space-y-2">
               <Label>Slug (URL pública)</Label>
               <Input value={form.slug} onChange={e => setForm(f => ({ ...f, slug: e.target.value }))} placeholder="minha-revenda" />
               <p className="text-xs text-muted-foreground">Para a loja pública: /loja/{form.slug || 'slug'}</p>
