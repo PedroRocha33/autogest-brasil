@@ -77,6 +77,7 @@ export default function Configuracoes() {
       cnpj: tenant.cnpj || '',
       phone: tenant.phone || '',
       address: tenant.address || '',
+      city: tenant.city || '',
       slug: tenant.slug || '',
     });
   }
