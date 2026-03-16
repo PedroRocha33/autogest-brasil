@@ -64,10 +64,8 @@ export default function Vistorias() {
     vehicle_id: '', type: 'Entrada', inspector: '', odometer: '', fuel_level: '1/2', observations: '',
   });
 
-  const [damagePoints, setDamagePoints] = useState<{ x: number; y: number }[]>([]);
 
   // Damage map state - clicked points on SVG
-  const [damagePoints, setDamagePoints] = useState<{ x: number; y: number }[]>([]);
 
   const { data: vistorias = [], isLoading } = useQuery({
     queryKey: ['vistorias', tenantId],
