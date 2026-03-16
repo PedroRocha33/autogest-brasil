@@ -16,6 +16,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { usePlan } from '@/hooks/usePlan';
 import UpgradeCard from '@/components/UpgradeCard';
+import PhotoUploader from '@/components/PhotoUploader';
 
 const statusColors: Record<string, string> = {
   'Disponível': 'bg-success/20 text-success',
