@@ -254,9 +254,10 @@ export default function Estoque() {
                 </div>
 
                 <Button type="submit" className="w-full" disabled={createVehicle.isPending}>
-                  {createVehicle.isPending ? 'Salvando...' : 'Cadastrar Veículo'}
+                  {createVehicle.isPending ? 'Salvando...' : 'Próximo: Adicionar Fotos'}
                 </Button>
               </form>
+              )}
             </DialogContent>
           </Dialog>
         )}
