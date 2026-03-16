@@ -17,12 +17,26 @@ export default function Login() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data: authData, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       toast.error(error.message);
-    } else {
-      navigate('/');
+      setLoading(false);
+      return;
     }
+    // Check if superadmin
+    if (authData.user) {
+      const { data: roleData } = await supabase
+        .from('user_roles')
+        .select('role')
+        .eq('user_id', authData.user.id)
+        .maybeSingle();
+      if (roleData?.role === 'superadmin') {
+        navigate('/admin');
+        setLoading(false);
+        return;
+      }
+    }
+    navigate('/dashboard');
     setLoading(false);
   };
 

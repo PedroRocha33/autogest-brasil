@@ -58,8 +58,8 @@ const navSections = [
     items: [
       { title: 'Financeiro', url: '/financeiro', icon: DollarSign },
       { title: 'Comissões', url: '/comissoes', icon: BarChart3 },
+      { title: 'Relatórios', url: '/relatorios', icon: BarChart3 },
       { title: 'Nota Fiscal', url: '#', icon: Receipt, disabled: true },
-      { title: 'Relatórios', url: '#', icon: BarChart3, disabled: true },
     ],
   },
   {

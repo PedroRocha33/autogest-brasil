@@ -12,6 +12,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { usePlan } from '@/hooks/usePlan';
+import UpgradeCard from '@/components/UpgradeCard';
 
 const statusColors: Record<string, string> = {
   'Aberto': 'bg-warning/20 text-warning',
@@ -23,6 +25,7 @@ const serviceTypes = ['Funilaria', 'Pintura', 'Mecânica', 'Elétrica', 'Estéti
 
 export default function Servicos() {
   const { tenantId } = useAuth();
+  const { limits } = usePlan();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [form, setForm] = useState({
@@ -88,6 +91,18 @@ export default function Servicos() {
       toast.success('Status atualizado!');
     },
   });
+
+  if (!limits.servicos) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-heading font-bold">Serviços</h1>
+        <UpgradeCard
+          title="Serviços bloqueados"
+          description="Ordens de serviço com controle de mecânicos e custos estão disponíveis a partir do plano Profissional."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

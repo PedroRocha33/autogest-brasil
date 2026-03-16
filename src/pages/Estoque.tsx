@@ -14,6 +14,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { usePlan } from '@/hooks/usePlan';
+import UpgradeCard from '@/components/UpgradeCard';
 
 const statusColors: Record<string, string> = {
   'Disponível': 'bg-success/20 text-success',
@@ -34,6 +36,7 @@ const transmissions = ['Manual', 'Automático', 'CVT'];
 export default function Estoque() {
   const navigate = useNavigate();
   const { tenantId } = useAuth();
+  const { limits } = usePlan();
   const queryClient = useQueryClient();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -118,102 +121,114 @@ export default function Estoque() {
           <h1 className="text-2xl font-heading font-bold">Estoque</h1>
           <p className="text-muted-foreground text-sm">{vehicles.length} veículos cadastrados</p>
         </div>
-        <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-          <DialogTrigger asChild>
-            <Button><Plus className="mr-2 h-4 w-4" />Cadastrar Veículo</Button>
-          </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
-            <DialogHeader>
-              <DialogTitle className="font-heading">Novo Veículo</DialogTitle>
-            </DialogHeader>
-            <form onSubmit={(e) => { e.preventDefault(); createVehicle.mutate(); }} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label>Marca *</Label>
-                  <Input placeholder="Hyundai" value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} required />
+        {vehicles.length >= limits.maxVehicles ? (
+          <div />
+        ) : (
+          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
+            <DialogTrigger asChild>
+              <Button><Plus className="mr-2 h-4 w-4" />Cadastrar Veículo</Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[85vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="font-heading">Novo Veículo</DialogTitle>
+              </DialogHeader>
+              <form onSubmit={(e) => { e.preventDefault(); createVehicle.mutate(); }} className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label>Marca *</Label>
+                    <Input placeholder="Hyundai" value={form.brand} onChange={e => setForm(f => ({ ...f, brand: e.target.value }))} required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Modelo *</Label>
+                    <Input placeholder="HB20" value={form.model} onChange={e => setForm(f => ({ ...f, model: e.target.value }))} required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Versão</Label>
+                    <Input placeholder="1.0 Sense" value={form.version} onChange={e => setForm(f => ({ ...f, version: e.target.value }))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Ano *</Label>
+                    <Input type="number" placeholder="2024" value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} required />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Cor</Label>
+                    <Input placeholder="Branco" value={form.color} onChange={e => setForm(f => ({ ...f, color: e.target.value }))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>KM</Label>
+                    <Input type="number" placeholder="35000" value={form.km} onChange={e => setForm(f => ({ ...f, km: e.target.value }))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Combustível</Label>
+                    <Select value={form.fuel} onValueChange={v => setForm(f => ({ ...f, fuel: v }))}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>{fuelTypes.map(ft => <SelectItem key={ft} value={ft}>{ft}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Câmbio</Label>
+                    <Select value={form.transmission} onValueChange={v => setForm(f => ({ ...f, transmission: v }))}>
+                      <SelectTrigger><SelectValue /></SelectTrigger>
+                      <SelectContent>{transmissions.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Placa</Label>
+                    <Input placeholder="ABC-1D23" value={form.plate} onChange={e => setForm(f => ({ ...f, plate: e.target.value }))} />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>Modelo *</Label>
-                  <Input placeholder="HB20" value={form.model} onChange={e => setForm(f => ({ ...f, model: e.target.value }))} required />
-                </div>
-                <div className="space-y-2">
-                  <Label>Versão</Label>
-                  <Input placeholder="1.0 Sense" value={form.version} onChange={e => setForm(f => ({ ...f, version: e.target.value }))} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Ano *</Label>
-                  <Input type="number" placeholder="2024" value={form.year} onChange={e => setForm(f => ({ ...f, year: e.target.value }))} required />
-                </div>
-                <div className="space-y-2">
-                  <Label>Cor</Label>
-                  <Input placeholder="Branco" value={form.color} onChange={e => setForm(f => ({ ...f, color: e.target.value }))} />
-                </div>
-                <div className="space-y-2">
-                  <Label>KM</Label>
-                  <Input type="number" placeholder="35000" value={form.km} onChange={e => setForm(f => ({ ...f, km: e.target.value }))} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Combustível</Label>
-                  <Select value={form.fuel} onValueChange={v => setForm(f => ({ ...f, fuel: v }))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>{fuelTypes.map(ft => <SelectItem key={ft} value={ft}>{ft}</SelectItem>)}</SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Câmbio</Label>
-                  <Select value={form.transmission} onValueChange={v => setForm(f => ({ ...f, transmission: v }))}>
-                    <SelectTrigger><SelectValue /></SelectTrigger>
-                    <SelectContent>{transmissions.map(t => <SelectItem key={t} value={t}>{t}</SelectItem>)}</SelectContent>
-                  </Select>
-                </div>
-                <div className="space-y-2">
-                  <Label>Placa</Label>
-                  <Input placeholder="ABC-1D23" value={form.plate} onChange={e => setForm(f => ({ ...f, plate: e.target.value }))} />
-                </div>
-              </div>
 
-              <div className="grid grid-cols-3 gap-4">
-                <div className="space-y-2">
-                  <Label>Preço de Custo</Label>
-                  <Input type="number" step="0.01" placeholder="60000" value={form.cost_price} onChange={e => setForm(f => ({ ...f, cost_price: e.target.value }))} />
+                <div className="grid grid-cols-3 gap-4">
+                  <div className="space-y-2">
+                    <Label>Preço de Custo</Label>
+                    <Input type="number" step="0.01" placeholder="60000" value={form.cost_price} onChange={e => setForm(f => ({ ...f, cost_price: e.target.value }))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Preço de Venda</Label>
+                    <Input type="number" step="0.01" placeholder="72900" value={form.sale_price} onChange={e => setForm(f => ({ ...f, sale_price: e.target.value }))} />
+                  </div>
+                  <div className="space-y-2">
+                    <Label>Preço Mínimo</Label>
+                    <Input type="number" step="0.01" placeholder="68000" value={form.min_price} onChange={e => setForm(f => ({ ...f, min_price: e.target.value }))} />
+                  </div>
                 </div>
-                <div className="space-y-2">
-                  <Label>Preço de Venda</Label>
-                  <Input type="number" step="0.01" placeholder="72900" value={form.sale_price} onChange={e => setForm(f => ({ ...f, sale_price: e.target.value }))} />
-                </div>
-                <div className="space-y-2">
-                  <Label>Preço Mínimo</Label>
-                  <Input type="number" step="0.01" placeholder="68000" value={form.min_price} onChange={e => setForm(f => ({ ...f, min_price: e.target.value }))} />
-                </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label>Opcionais</Label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-                  {featuresList.map(feature => (
-                    <label key={feature} className="flex items-center gap-2 text-sm cursor-pointer">
-                      <Checkbox
-                        checked={form.features.includes(feature)}
-                        onCheckedChange={() => toggleFeature(feature)}
-                      />
-                      {feature}
-                    </label>
-                  ))}
+                <div className="space-y-2">
+                  <Label>Opcionais</Label>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                    {featuresList.map(feature => (
+                      <label key={feature} className="flex items-center gap-2 text-sm cursor-pointer">
+                        <Checkbox
+                          checked={form.features.includes(feature)}
+                          onCheckedChange={() => toggleFeature(feature)}
+                        />
+                        {feature}
+                      </label>
+                    ))}
+                  </div>
                 </div>
-              </div>
 
-              <div className="space-y-2">
-                <Label>Observações</Label>
-                <Textarea placeholder="Observações sobre o veículo..." value={form.observations} onChange={e => setForm(f => ({ ...f, observations: e.target.value }))} />
-              </div>
+                <div className="space-y-2">
+                  <Label>Observações</Label>
+                  <Textarea placeholder="Observações sobre o veículo..." value={form.observations} onChange={e => setForm(f => ({ ...f, observations: e.target.value }))} />
+                </div>
 
-              <Button type="submit" className="w-full" disabled={createVehicle.isPending}>
-                {createVehicle.isPending ? 'Salvando...' : 'Cadastrar Veículo'}
-              </Button>
-            </form>
-          </DialogContent>
-        </Dialog>
+                <Button type="submit" className="w-full" disabled={createVehicle.isPending}>
+                  {createVehicle.isPending ? 'Salvando...' : 'Cadastrar Veículo'}
+                </Button>
+              </form>
+            </DialogContent>
+          </Dialog>
+        )}
       </div>
+
+      {/* Vehicle limit upgrade card */}
+      {vehicles.length >= limits.maxVehicles && (
+        <UpgradeCard
+          title="Limite de veículos atingido"
+          description={`Você atingiu o limite de ${limits.maxVehicles} veículos do plano Básico. Faça upgrade para o Profissional e cadastre veículos ilimitados, adicione fotos ilimitadas e desbloqueie vistorias, comissões e muito mais.`}
+        />
+      )}
 
       {/* Filters */}
       <div className="flex flex-wrap gap-3">

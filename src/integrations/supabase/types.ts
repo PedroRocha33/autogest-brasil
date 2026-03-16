@@ -63,6 +63,7 @@ export type Database = {
           paid_at: string | null
           salesperson_id: string | null
           tenant_id: string
+          user_id: string | null
           value: number
         }
         Insert: {
@@ -72,6 +73,7 @@ export type Database = {
           paid_at?: string | null
           salesperson_id?: string | null
           tenant_id: string
+          user_id?: string | null
           value: number
         }
         Update: {
@@ -81,6 +83,7 @@ export type Database = {
           paid_at?: string | null
           salesperson_id?: string | null
           tenant_id?: string
+          user_id?: string | null
           value?: number
         }
         Relationships: [
@@ -218,6 +221,7 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          commission_rate: number | null
           created_at: string
           email: string
           id: string
@@ -227,6 +231,7 @@ export type Database = {
         }
         Insert: {
           avatar_url?: string | null
+          commission_rate?: number | null
           created_at?: string
           email: string
           id?: string
@@ -236,6 +241,7 @@ export type Database = {
         }
         Update: {
           avatar_url?: string | null
+          commission_rate?: number | null
           created_at?: string
           email?: string
           id?: string
@@ -313,6 +319,7 @@ export type Database = {
       tenants: {
         Row: {
           address: string | null
+          city: string | null
           cnpj: string | null
           created_at: string
           id: string
@@ -321,9 +328,11 @@ export type Database = {
           phone: string | null
           plan: string | null
           slug: string | null
+          status: string
         }
         Insert: {
           address?: string | null
+          city?: string | null
           cnpj?: string | null
           created_at?: string
           id?: string
@@ -332,9 +341,11 @@ export type Database = {
           phone?: string | null
           plan?: string | null
           slug?: string | null
+          status?: string
         }
         Update: {
           address?: string | null
+          city?: string | null
           cnpj?: string | null
           created_at?: string
           id?: string
@@ -343,6 +354,7 @@ export type Database = {
           phone?: string | null
           plan?: string | null
           slug?: string | null
+          status?: string
         }
         Relationships: []
       }
@@ -570,7 +582,7 @@ export type Database = {
       }
     }
     Enums: {
-      app_role: "admin" | "vendedor" | "gerente"
+      app_role: "admin" | "vendedor" | "gerente" | "superadmin"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -698,7 +710,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      app_role: ["admin", "vendedor", "gerente"],
+      app_role: ["admin", "vendedor", "gerente", "superadmin"],
     },
   },
 } as const

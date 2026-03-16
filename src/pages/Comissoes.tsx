@@ -3,9 +3,12 @@ import { Badge } from '@/components/ui/badge';
 import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery } from '@tanstack/react-query';
+import { usePlan } from '@/hooks/usePlan';
+import UpgradeCard from '@/components/UpgradeCard';
 
 export default function Comissoes() {
   const { tenantId } = useAuth();
+  const { limits } = usePlan();
 
   const { data: commissions = [], isLoading } = useQuery({
     queryKey: ['commissions', tenantId],
@@ -21,6 +24,18 @@ export default function Comissoes() {
     },
     enabled: !!tenantId,
   });
+
+  if (!limits.comissoes) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-heading font-bold">Comissões</h1>
+        <UpgradeCard
+          title="Comissões bloqueadas"
+          description="Controle de comissões por vendedor está disponível a partir do plano Profissional."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

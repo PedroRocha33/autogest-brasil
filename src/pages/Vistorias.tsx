@@ -14,6 +14,8 @@ import { useAuth } from '@/contexts/AuthContext';
 import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { usePlan } from '@/hooks/usePlan';
+import UpgradeCard from '@/components/UpgradeCard';
 
 const statusColors: Record<string, string> = {
   'Agendada': 'bg-warning/20 text-warning',
@@ -53,6 +55,7 @@ const itensList = ['Chave reserva', 'Manual', 'Triângulo', 'Macaco', 'Chave de 
 
 export default function Vistorias() {
   const { tenantId } = useAuth();
+  const { limits } = usePlan();
   const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [checklist, setChecklist] = useState<Record<string, Record<string, string>>>({});
@@ -61,8 +64,9 @@ export default function Vistorias() {
     vehicle_id: '', type: 'Entrada', inspector: '', odometer: '', fuel_level: '1/2', observations: '',
   });
 
-  // Damage map state - clicked points on SVG
   const [damagePoints, setDamagePoints] = useState<{ x: number; y: number }[]>([]);
+
+  // Damage map state - clicked points on SVG
 
   const { data: vistorias = [], isLoading } = useQuery({
     queryKey: ['vistorias', tenantId],
@@ -137,6 +141,18 @@ export default function Vistorias() {
       setDamagePoints(prev => [...prev, { x, y }]);
     }
   };
+
+  if (!limits.vistorias) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-heading font-bold">Vistorias</h1>
+        <UpgradeCard
+          title="Vistorias bloqueadas"
+          description="Vistorias completas com checklist, mapa de avarias e fotos estão disponíveis a partir do plano Profissional."
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">

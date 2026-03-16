@@ -5,10 +5,14 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider } from "@/contexts/AuthContext";
 import ProtectedRoute from "@/components/ProtectedRoute";
+import SuperAdminRoute from "@/components/SuperAdminRoute";
 import AppLayout from "@/components/AppLayout";
+import Index from "@/pages/Index";
 import Login from "@/pages/Login";
 import Register from "@/pages/Register";
 import Onboarding from "@/pages/Onboarding";
+import Landing from "@/pages/Landing";
+import Marketplace from "@/pages/Marketplace";
 import Loja from "@/pages/Loja";
 import Dashboard from "@/pages/Dashboard";
 import Estoque from "@/pages/Estoque";
@@ -20,7 +24,9 @@ import Vistorias from "@/pages/Vistorias";
 import Servicos from "@/pages/Servicos";
 import Financeiro from "@/pages/Financeiro";
 import Comissoes from "@/pages/Comissoes";
+import Relatorios from "@/pages/Relatorios";
 import Configuracoes from "@/pages/Configuracoes";
+import Admin from "@/pages/Admin";
 import NotFound from "@/pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -33,14 +39,25 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
+            {/* Public routes */}
+            <Route path="/" element={<Index />} />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
+            <Route path="/landing" element={<Landing />} />
+            <Route path="/marketplace" element={<Marketplace />} />
+            <Route path="/loja/:slug" element={<Loja />} />
+
             <Route path="/onboarding" element={
               <ProtectedRoute><Onboarding /></ProtectedRoute>
             } />
+
+            {/* SuperAdmin */}
+            <Route path="/admin" element={
+              <SuperAdminRoute><Admin /></SuperAdminRoute>
+            } />
             
             {/* Protected app routes */}
-            <Route path="/" element={
+            <Route path="/dashboard" element={
               <ProtectedRoute>
                 <AppLayout><Dashboard /></AppLayout>
               </ProtectedRoute>
@@ -90,13 +107,17 @@ const App = () => (
                 <AppLayout><Comissoes /></AppLayout>
               </ProtectedRoute>
             } />
+            <Route path="/relatorios" element={
+              <ProtectedRoute>
+                <AppLayout><Relatorios /></AppLayout>
+              </ProtectedRoute>
+            } />
             <Route path="/configuracoes" element={
               <ProtectedRoute>
                 <AppLayout><Configuracoes /></AppLayout>
               </ProtectedRoute>
             } />
             
-            <Route path="/loja/:slug" element={<Loja />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>

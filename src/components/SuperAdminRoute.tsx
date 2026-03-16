@@ -1,8 +1,8 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { Navigate, useLocation } from 'react-router-dom';
 
-export default function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { session, profile, role, loading } = useAuth();
+export default function SuperAdminRoute({ children }: { children: React.ReactNode }) {
+  const { session, role, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -17,14 +17,8 @@ export default function ProtectedRoute({ children }: { children: React.ReactNode
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // Superadmin goes to /admin
-  if (profile && role === 'superadmin' && location.pathname !== '/admin') {
-    return <Navigate to="/admin" replace />;
-  }
-
-  // If logged in but no tenant, redirect to onboarding
-  if (!profile?.tenant_id && location.pathname !== '/onboarding') {
-    return <Navigate to="/onboarding" replace />;
+  if (role !== 'superadmin') {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return <>{children}</>;
