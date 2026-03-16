@@ -12,6 +12,7 @@ import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend } from 'recharts';
+import { usePlan } from '@/hooks/usePlan';
 
 const categories = ['Venda de veículo', 'Compra de veículo', 'Serviço', 'Despesa operacional', 'Comissão', 'Outros'];
 
