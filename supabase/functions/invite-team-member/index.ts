@@ -77,7 +77,7 @@ Deno.serve(async (req) => {
     // Create auth user
     const { data: newUser, error: createError } = await adminClient.auth.admin.createUser({
       email,
-      password: Math.random().toString(36).slice(-10) + "A1!",
+      password,
       email_confirm: true,
       user_metadata: { name },
     });
