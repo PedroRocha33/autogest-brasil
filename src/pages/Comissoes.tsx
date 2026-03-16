@@ -35,20 +35,8 @@ export default function Comissoes() {
         />
       </div>
     );
-  }
-    queryKey: ['commissions', tenantId],
-    queryFn: async () => {
-      if (!tenantId) return [];
-      const { data, error } = await supabase
-        .from('commissions')
-        .select('*, deals(vehicles(brand, model))')
-        .eq('tenant_id', tenantId)
-        .order('paid_at', { ascending: false });
-      if (error) throw error;
-      return data;
-    },
-    enabled: !!tenantId,
-  });
+
+
 
   return (
     <div className="space-y-6">
