@@ -84,6 +84,7 @@ export default function Negociacoes() {
         vehicle_id: newDeal.vehicle_id || null,
         asking_price: parseFloat(newDeal.asking_price) || null,
         stage: 'Contato Inicial',
+        salesperson_id: user?.id || null,
       });
       if (error) throw error;
     },
