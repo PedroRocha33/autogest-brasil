@@ -1,12 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
-import { Card, CardContent } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Search, Car, Calendar, Gauge, Fuel, MapPin, Store } from 'lucide-react';
+import { Car, TrendingUp, Shield, Store } from 'lucide-react';
+import MarketplaceHeader from '@/components/marketplace/MarketplaceHeader';
+import MarketplaceFilters from '@/components/marketplace/MarketplaceFilters';
+import MarketplaceVehicleCard from '@/components/marketplace/MarketplaceVehicleCard';
 
 interface MarketplaceVehicle {
   id: string;
@@ -19,6 +17,8 @@ interface MarketplaceVehicle {
   sale_price: number | null;
   photos: string[] | null;
   tenant_id: string;
+  color: string | null;
+  transmission: string | null;
 }
 
 interface MarketplaceTenant {
@@ -26,25 +26,33 @@ interface MarketplaceTenant {
   name: string;
   slug: string | null;
   city: string | null;
+  logo_url: string | null;
 }
+
+const defaultFilters = {
+  search: '',
+  brand: 'all',
+  fuel: 'all',
+  city: 'all',
+  priceRange: 'all',
+  yearRange: 'all',
+  transmission: 'all',
+  color: 'all',
+  sortBy: 'recent',
+};
 
 export default function Marketplace() {
   const navigate = useNavigate();
   const [vehicles, setVehicles] = useState<MarketplaceVehicle[]>([]);
   const [tenants, setTenants] = useState<MarketplaceTenant[]>([]);
   const [loading, setLoading] = useState(true);
-  const [search, setSearch] = useState('');
-  const [brandFilter, setBrandFilter] = useState('all');
-  const [fuelFilter, setFuelFilter] = useState('all');
-  const [cityFilter, setCityFilter] = useState('all');
-  const [priceRange, setPriceRange] = useState('all');
+  const [filters, setFilters] = useState(defaultFilters);
 
   useEffect(() => {
     async function load() {
-      // Fetch marketplace tenants
       const { data: t } = await supabase
         .from('tenants')
-        .select('id, name, slug, city')
+        .select('id, name, slug, city, logo_url')
         .eq('plan', 'marketplace')
         .eq('status', 'ativo');
 
@@ -53,11 +61,10 @@ export default function Marketplace() {
 
       if (tenantList.length === 0) { setLoading(false); return; }
 
-      // Fetch available vehicles from these tenants
       const tenantIds = tenantList.map(t => t.id);
       const { data: v } = await supabase
         .from('vehicles')
-        .select('id, brand, model, version, year, km, fuel, sale_price, photos, tenant_id')
+        .select('id, brand, model, version, year, km, fuel, sale_price, photos, tenant_id, color, transmission')
         .eq('status', 'Disponível')
         .in('tenant_id', tenantIds)
         .order('created_at', { ascending: false });
@@ -70,158 +77,143 @@ export default function Marketplace() {
 
   const getTenant = (tenantId: string) => tenants.find(t => t.id === tenantId);
 
-  const brands = [...new Set(vehicles.map(v => v.brand))].sort();
-  const fuels = [...new Set(vehicles.map(v => v.fuel).filter(Boolean))].sort();
-  const cities = [...new Set(tenants.map(t => t.city).filter(Boolean))].sort();
+  // Filter options
+  const filterOptions = {
+    brands: [...new Set(vehicles.map(v => v.brand))].sort(),
+    fuels: [...new Set(vehicles.map(v => v.fuel).filter(Boolean) as string[])].sort(),
+    cities: [...new Set(tenants.map(t => t.city).filter(Boolean) as string[])].sort(),
+    transmissions: [...new Set(vehicles.map(v => v.transmission).filter(Boolean) as string[])].sort(),
+    colors: [...new Set(vehicles.map(v => v.color).filter(Boolean) as string[])].sort(),
+  };
 
-  const filtered = vehicles.filter(v => {
-    const matchSearch = `${v.brand} ${v.model} ${v.version || ''}`.toLowerCase().includes(search.toLowerCase());
-    const matchBrand = brandFilter === 'all' || v.brand === brandFilter;
-    const matchFuel = fuelFilter === 'all' || v.fuel === fuelFilter;
-    const tenant = getTenant(v.tenant_id);
-    const matchCity = cityFilter === 'all' || tenant?.city === cityFilter;
-    let matchPrice = true;
-    if (priceRange !== 'all' && v.sale_price) {
-      const price = Number(v.sale_price);
-      if (priceRange === '0-50') matchPrice = price <= 50000;
-      else if (priceRange === '50-100') matchPrice = price > 50000 && price <= 100000;
-      else if (priceRange === '100-200') matchPrice = price > 100000 && price <= 200000;
-      else if (priceRange === '200+') matchPrice = price > 200000;
-    }
-    return matchSearch && matchBrand && matchFuel && matchCity && matchPrice;
-  });
+  // Apply filters
+  const filtered = vehicles
+    .filter(v => {
+      const matchSearch = `${v.brand} ${v.model} ${v.version || ''}`.toLowerCase().includes(filters.search.toLowerCase());
+      const matchBrand = filters.brand === 'all' || v.brand === filters.brand;
+      const matchFuel = filters.fuel === 'all' || v.fuel === filters.fuel;
+      const matchTransmission = filters.transmission === 'all' || v.transmission === filters.transmission;
+      const matchColor = filters.color === 'all' || v.color === filters.color;
+      const tenant = getTenant(v.tenant_id);
+      const matchCity = filters.city === 'all' || tenant?.city === filters.city;
+
+      let matchPrice = true;
+      if (filters.priceRange !== 'all' && v.sale_price) {
+        const p = Number(v.sale_price);
+        if (filters.priceRange === '0-30') matchPrice = p <= 30000;
+        else if (filters.priceRange === '30-50') matchPrice = p > 30000 && p <= 50000;
+        else if (filters.priceRange === '50-80') matchPrice = p > 50000 && p <= 80000;
+        else if (filters.priceRange === '80-120') matchPrice = p > 80000 && p <= 120000;
+        else if (filters.priceRange === '120-200') matchPrice = p > 120000 && p <= 200000;
+        else if (filters.priceRange === '200+') matchPrice = p > 200000;
+      }
+
+      let matchYear = true;
+      if (filters.yearRange !== 'all') {
+        const y = v.year;
+        if (filters.yearRange === '2024-2026') matchYear = y >= 2024;
+        else if (filters.yearRange === '2020-2023') matchYear = y >= 2020 && y <= 2023;
+        else if (filters.yearRange === '2015-2019') matchYear = y >= 2015 && y <= 2019;
+        else if (filters.yearRange === '2010-2014') matchYear = y >= 2010 && y <= 2014;
+        else if (filters.yearRange === '0-2009') matchYear = y <= 2009;
+      }
+
+      return matchSearch && matchBrand && matchFuel && matchCity && matchPrice && matchYear && matchTransmission && matchColor;
+    })
+    .sort((a, b) => {
+      switch (filters.sortBy) {
+        case 'price_asc': return (a.sale_price || 0) - (b.sale_price || 0);
+        case 'price_desc': return (b.sale_price || 0) - (a.sale_price || 0);
+        case 'km_asc': return (a.km || 0) - (b.km || 0);
+        case 'year_desc': return b.year - a.year;
+        default: return 0; // already sorted by created_at desc
+      }
+    });
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Header */}
-      <header className="border-b border-border bg-card/80 backdrop-blur-md sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-2 cursor-pointer" onClick={() => navigate('/marketplace')}>
-            <div className="h-8 w-8 rounded-lg bg-primary flex items-center justify-center">
-              <Car className="h-5 w-5 text-primary-foreground" />
-            </div>
-            <span className="font-heading font-bold text-lg">MinasDeCarros</span>
-          </div>
-          <div className="flex items-center gap-3">
-            <Button variant="ghost" size="sm" asChild>
-              <a href="/landing">Para Revendas</a>
-            </Button>
-          </div>
-        </div>
-      </header>
+      <MarketplaceHeader />
 
       {/* Hero */}
-      <section className="bg-gradient-to-b from-card to-background py-10 md:py-14">
-        <div className="max-w-7xl mx-auto px-4 text-center">
-          <h1 className="text-3xl md:text-4xl font-heading font-bold mb-2">
-            Encontre seu carro ideal
+      <section className="relative overflow-hidden border-b border-border">
+        <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-background to-background" />
+        <div className="relative max-w-7xl mx-auto px-4 py-12 md:py-16">
+          <h1 className="text-3xl md:text-5xl font-heading font-bold mb-3 tracking-tight">
+            Encontre o carro ideal<br />
+            <span className="text-primary">na região carbonífera</span>
           </h1>
-          <p className="text-muted-foreground mb-8">
-            {vehicles.length} veículos de {tenants.length} revendas parceiras
+          <p className="text-muted-foreground text-base md:text-lg max-w-xl mb-8">
+            Compare preços e encontre as melhores ofertas de{' '}
+            <span className="text-foreground font-medium">{tenants.length}</span> revendas parceiras.
           </p>
-          <div className="max-w-5xl mx-auto">
-            <div className="flex flex-col sm:flex-row gap-2">
-              <div className="relative flex-1">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input className="pl-9 h-11" placeholder="Buscar marca, modelo..." value={search} onChange={e => setSearch(e.target.value)} />
+
+          {/* Stats */}
+          <div className="flex flex-wrap gap-6">
+            <div className="flex items-center gap-2.5 text-sm">
+              <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Car className="h-4 w-4 text-primary" />
               </div>
-              <Select value={brandFilter} onValueChange={setBrandFilter}>
-                <SelectTrigger className="w-full sm:w-[140px] h-11"><SelectValue placeholder="Marca" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todas marcas</SelectItem>
-                  {brands.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              <Select value={fuelFilter} onValueChange={setFuelFilter}>
-                <SelectTrigger className="w-full sm:w-[130px] h-11"><SelectValue placeholder="Combustível" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Todos</SelectItem>
-                  {fuels.map(f => <SelectItem key={f!} value={f!}>{f}</SelectItem>)}
-                </SelectContent>
-              </Select>
-              <Select value={priceRange} onValueChange={setPriceRange}>
-                <SelectTrigger className="w-full sm:w-[150px] h-11"><SelectValue placeholder="Preço" /></SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Qualquer preço</SelectItem>
-                  <SelectItem value="0-50">Até R$ 50 mil</SelectItem>
-                  <SelectItem value="50-100">R$ 50–100 mil</SelectItem>
-                  <SelectItem value="100-200">R$ 100–200 mil</SelectItem>
-                  <SelectItem value="200+">Acima de R$ 200 mil</SelectItem>
-                </SelectContent>
-              </Select>
-              {cities.length > 0 && (
-                <Select value={cityFilter} onValueChange={setCityFilter}>
-                  <SelectTrigger className="w-full sm:w-[140px] h-11"><SelectValue placeholder="Cidade" /></SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Todas cidades</SelectItem>
-                    {cities.map(c => <SelectItem key={c!} value={c!}>{c}</SelectItem>)}
-                  </SelectContent>
-                </Select>
-              )}
+              <div>
+                <p className="font-heading font-bold text-lg leading-none">{vehicles.length}</p>
+                <p className="text-xs text-muted-foreground">veículos</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5 text-sm">
+              <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Store className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <p className="font-heading font-bold text-lg leading-none">{tenants.length}</p>
+                <p className="text-xs text-muted-foreground">revendas</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-2.5 text-sm">
+              <div className="h-9 w-9 rounded-lg bg-primary/10 flex items-center justify-center">
+                <Shield className="h-4 w-4 text-primary" />
+              </div>
+              <div>
+                <p className="font-heading font-bold text-lg leading-none">100%</p>
+                <p className="text-xs text-muted-foreground">verificados</p>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Results */}
-      <div className="max-w-7xl mx-auto px-4 pt-4 pb-2">
-        <p className="text-sm text-muted-foreground">{filtered.length} veículos encontrados</p>
+      {/* Filters + Results */}
+      <div className="max-w-7xl mx-auto px-4 py-6">
+        <MarketplaceFilters
+          options={filterOptions}
+          values={filters}
+          onChange={setFilters}
+          totalResults={filtered.length}
+          totalVehicles={vehicles.length}
+        />
       </div>
 
-      <section className="max-w-7xl mx-auto px-4 pb-12">
+      <section className="max-w-7xl mx-auto px-4 pb-16">
         {loading ? (
-          <div className="text-center py-16">
+          <div className="text-center py-20">
             <div className="h-8 w-8 border-2 border-primary border-t-transparent rounded-full animate-spin mx-auto" />
+            <p className="text-sm text-muted-foreground mt-3">Carregando veículos...</p>
           </div>
         ) : filtered.length === 0 ? (
-          <div className="text-center py-16">
-            <Car className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-            <p className="text-muted-foreground">Nenhum veículo encontrado.</p>
+          <div className="text-center py-20">
+            <Car className="h-16 w-16 text-muted-foreground/20 mx-auto mb-4" />
+            <p className="text-lg font-heading font-semibold mb-1">Nenhum veículo encontrado</p>
+            <p className="text-sm text-muted-foreground">Tente ajustar os filtros para ver mais resultados.</p>
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {filtered.map(v => {
               const tenant = getTenant(v.tenant_id);
-              const photo = (v.photos as string[] | null)?.[0];
               return (
-                <Card
+                <MarketplaceVehicleCard
                   key={v.id}
-                  className="bg-card border-border hover:border-primary/40 transition-all cursor-pointer group overflow-hidden"
-                  onClick={() => tenant?.slug && navigate(`/loja/${tenant.slug}`)}
-                >
-                  <div className="aspect-[4/3] bg-secondary relative overflow-hidden">
-                    {photo ? (
-                      <img src={photo} alt={`${v.brand} ${v.model}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center">
-                        <Car className="h-12 w-12 text-muted-foreground/30" />
-                      </div>
-                    )}
-                  </div>
-                  <CardContent className="p-4 space-y-2">
-                    <h3 className="font-heading font-semibold text-sm">{v.brand} {v.model}</h3>
-                    {v.version && <p className="text-xs text-muted-foreground truncate">{v.version}</p>}
-                    <div className="flex items-center gap-3 text-xs text-muted-foreground">
-                      <span className="flex items-center gap-1"><Calendar className="h-3 w-3" />{v.year}</span>
-                      {v.km != null && <span className="flex items-center gap-1"><Gauge className="h-3 w-3" />{v.km.toLocaleString('pt-BR')} km</span>}
-                      {v.fuel && <span className="flex items-center gap-1"><Fuel className="h-3 w-3" />{v.fuel}</span>}
-                    </div>
-                    <div className="pt-2 border-t border-border flex items-center justify-between">
-                      <span className="text-lg font-heading font-bold text-primary">
-                        {v.sale_price ? `R$ ${Number(v.sale_price).toLocaleString('pt-BR')}` : 'Consulte'}
-                      </span>
-                    </div>
-                    {tenant && (
-                      <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-                        <Store className="h-3 w-3" />
-                        <span>{tenant.name}</span>
-                        {tenant.city && (
-                          <span className="flex items-center gap-0.5"><MapPin className="h-3 w-3" />{tenant.city}</span>
-                        )}
-                      </div>
-                    )}
-                  </CardContent>
-                </Card>
+                  vehicle={v}
+                  tenant={tenant}
+                  onClick={() => tenant?.slug ? navigate(`/loja/${tenant.slug}`) : undefined}
+                />
               );
             })}
           </div>
@@ -229,15 +221,19 @@ export default function Marketplace() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-8 px-4">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <div className="h-6 w-6 rounded bg-primary flex items-center justify-center">
-              <Car className="h-4 w-4 text-primary-foreground" />
+      <footer className="border-t border-border bg-card/50">
+        <div className="max-w-7xl mx-auto px-4 py-8">
+          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
+            <div className="flex items-center gap-2.5">
+              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
+                <Car className="h-4 w-4 text-primary-foreground" />
+              </div>
+              <span className="font-heading font-bold text-sm">Carros na Carbonífera</span>
             </div>
-            <span className="font-heading font-bold text-sm">MinasDeCarros</span>
+            <p className="text-xs text-muted-foreground">
+              © {new Date().getFullYear()} Carros na Carbonífera · Powered by AutoGest
+            </p>
           </div>
-          <p className="text-xs text-muted-foreground">Powered by AutoGest</p>
         </div>
       </footer>
     </div>
