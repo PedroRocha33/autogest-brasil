@@ -8,9 +8,12 @@ import { supabase } from '@/integrations/supabase/client';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'sonner';
 import { Building2, Save } from 'lucide-react';
+import { usePlan } from '@/hooks/usePlan';
+import TeamManagement from '@/components/TeamManagement';
 
 export default function Configuracoes() {
-  const { tenantId } = useAuth();
+  const { tenantId, role } = useAuth();
+  const { plan } = usePlan();
   const queryClient = useQueryClient();
 
   const { data: tenant } = useQuery({
@@ -123,6 +126,11 @@ export default function Configuracoes() {
           </form>
         </CardContent>
       </Card>
+
+      {/* Team Management - only for marketplace admins */}
+      {plan === 'marketplace' && (role === 'admin' || role === 'gerente') && (
+        <TeamManagement />
+      )}
     </div>
   );
 }
