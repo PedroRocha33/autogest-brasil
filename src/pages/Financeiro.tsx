@@ -20,7 +20,6 @@ export default function Financeiro() {
   const { tenantId } = useAuth();
   const { limits } = usePlan();
   const queryClient = useQueryClient();
-  const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [typeFilter, setTypeFilter] = useState('all');
   const [form, setForm] = useState({ description: '', category: 'Venda de veículo', type: 'entrada', value: '', date: '' });

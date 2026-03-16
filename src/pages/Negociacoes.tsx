@@ -33,7 +33,6 @@ export default function Negociacoes() {
   const { tenantId, user } = useAuth();
   const { limits } = usePlan();
   const queryClient = useQueryClient();
-  const queryClient = useQueryClient();
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedDeal, setSelectedDeal] = useState<any>(null);
   const [form, setForm] = useState({ client_name: '', vehicle_info: '', asking_price: '', stage: 'Contato Inicial' });
