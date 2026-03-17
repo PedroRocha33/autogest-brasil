@@ -175,33 +175,41 @@ export default function Loja() {
         </div>
       </header>
 
-      {/* Hero */}
-      <section className="bg-gradient-to-b from-card to-background py-10 md:py-14">
-        <div className="max-w-7xl mx-auto px-4 text-center">
+      {/* Hero with Banner */}
+      <section className="relative overflow-hidden">
+        {(tenant as any).banner_url ? (
+          <div className="absolute inset-0">
+            <img src={(tenant as any).banner_url} alt="" className="w-full h-full object-cover" />
+            <div className="absolute inset-0 bg-background/70 backdrop-blur-[2px]" />
+          </div>
+        ) : (
+          <div className="absolute inset-0 bg-gradient-to-b from-card to-background" />
+        )}
+        <div className="relative max-w-7xl mx-auto px-4 py-10 md:py-14 text-center">
           <h2 className="text-3xl md:text-4xl font-heading font-bold mb-2">Encontre seu próximo carro</h2>
           <p className="text-muted-foreground mb-8">{vehicles.length} veículos disponíveis</p>
           <div className="max-w-4xl mx-auto">
             <div className="flex flex-col sm:flex-row gap-2">
               <div className="relative flex-1">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                <Input className="pl-9 h-11" placeholder="Buscar marca, modelo, versão..." value={search} onChange={e => setSearch(e.target.value)} />
+                <Input className="pl-9 h-11 bg-background/90" placeholder="Buscar marca, modelo, versão..." value={search} onChange={e => setSearch(e.target.value)} />
               </div>
               <Select value={brandFilter} onValueChange={setBrandFilter}>
-                <SelectTrigger className="w-full sm:w-[140px] h-11"><SelectValue placeholder="Marca" /></SelectTrigger>
+                <SelectTrigger className="w-full sm:w-[140px] h-11 bg-background/90"><SelectValue placeholder="Marca" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todas marcas</SelectItem>
                   {brands.map(b => <SelectItem key={b} value={b}>{b}</SelectItem>)}
                 </SelectContent>
               </Select>
               <Select value={fuelFilter} onValueChange={setFuelFilter}>
-                <SelectTrigger className="w-full sm:w-[140px] h-11"><SelectValue placeholder="Combustível" /></SelectTrigger>
+                <SelectTrigger className="w-full sm:w-[140px] h-11 bg-background/90"><SelectValue placeholder="Combustível" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos</SelectItem>
                   {fuels.map(f => <SelectItem key={f!} value={f!}>{f}</SelectItem>)}
                 </SelectContent>
               </Select>
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-full sm:w-[160px] h-11"><SelectValue placeholder="Ordenar" /></SelectTrigger>
+                <SelectTrigger className="w-full sm:w-[160px] h-11 bg-background/90"><SelectValue placeholder="Ordenar" /></SelectTrigger>
                 <SelectContent>
                   <SelectItem value="recent">Mais recentes</SelectItem>
                   <SelectItem value="price_asc">Menor preço</SelectItem>
