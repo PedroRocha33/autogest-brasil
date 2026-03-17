@@ -19,6 +19,8 @@ interface Tenant {
   phone: string | null;
   address: string | null;
   logo_url: string | null;
+  banner_url: string | null;
+  city: string | null;
 }
 
 interface Vehicle {
