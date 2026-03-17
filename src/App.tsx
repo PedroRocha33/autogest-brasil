@@ -18,6 +18,7 @@ import Dashboard from "@/pages/Dashboard";
 import Estoque from "@/pages/Estoque";
 import VehicleDetail from "@/pages/VehicleDetail";
 import Negociacoes from "@/pages/Negociacoes";
+import Leads from "@/pages/Leads";
 import Clientes from "@/pages/Clientes";
 import ClienteDetail from "@/pages/ClienteDetail";
 import Vistorias from "@/pages/Vistorias";
@@ -75,6 +76,11 @@ const App = () => (
             <Route path="/negociacoes" element={
               <ProtectedRoute>
                 <AppLayout><Negociacoes /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/leads" element={
+              <ProtectedRoute>
+                <AppLayout><Leads /></AppLayout>
               </ProtectedRoute>
             } />
             <Route path="/clientes" element={

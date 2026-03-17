@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Car, DollarSign, Handshake, Wrench, ClipboardCheck, Search, FileText, Plus, Eye, TrendingUp, TrendingDown, Users, Clock, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Car, DollarSign, Handshake, Wrench, ClipboardCheck, Search, FileText, Plus, Eye, TrendingUp, TrendingDown, Users, Clock, ArrowUpRight, ArrowDownRight, Megaphone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { useAuth } from '@/contexts/AuthContext';
@@ -97,6 +97,17 @@ export default function Dashboard() {
     enabled: !!tenantId,
   });
 
+  // Fetch leads
+  const { data: leads = [] } = useQuery({
+    queryKey: ['dashboard-leads', tenantId],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      const { data } = await supabase.from('leads').select('*').eq('tenant_id', tenantId);
+      return data || [];
+    },
+    enabled: !!tenantId,
+  });
+
   // Computed KPIs
   const now = new Date();
   const currentMonth = now.getMonth();
@@ -173,15 +184,18 @@ export default function Dashboard() {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5);
 
+  const newLeads = leads.filter((l: any) => l.status === 'Novo').length;
+  const totalLeads = leads.length;
+
   const formatCurrency = (v: number) => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}`;
 
   const kpis = [
     { label: 'Veículos em Estoque', value: vehiclesAvailable.toString(), subtext: `${totalVehicles} total`, icon: Car, color: 'text-info', trend: null },
     { label: 'Receita do Mês', value: formatCurrency(monthRevenue), subtext: monthProfit >= 0 ? `Lucro: ${formatCurrency(monthProfit)}` : `Prejuízo: ${formatCurrency(monthProfit)}`, icon: DollarSign, color: 'text-success', trend: monthProfit >= 0 ? 'up' : 'down' },
+    { label: 'Leads Novos', value: newLeads.toString(), subtext: `${totalLeads} total`, icon: Megaphone, color: 'text-primary', trend: newLeads > 0 ? 'up' : null },
     { label: 'Negociações Ativas', value: activeDeals.length.toString(), subtext: `Pipeline: ${formatCurrency(pipelineValue)}`, icon: Handshake, color: 'text-warning', trend: null },
     { label: 'Clientes Cadastrados', value: clients.length.toString(), subtext: `${completedDeals.length} vendas realizadas`, icon: Users, color: 'text-primary', trend: null },
     { label: 'Serviços em Andamento', value: activeServices.toString(), subtext: `${services.length} total`, icon: Wrench, color: 'text-info', trend: null },
-    { label: 'Tempo Médio em Estoque', value: `${avgDaysInStock}d`, subtext: `${vehiclesAvailable} veículos`, icon: Clock, color: 'text-warning', trend: null },
   ];
 
   return (
@@ -291,7 +305,36 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Recent Deals */}
+        {/* Recent Leads */}
+        <Card className="bg-card border-border">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-heading font-semibold">Leads Recentes</h2>
+              <Button variant="ghost" size="sm" onClick={() => navigate('/leads')}>Ver todos</Button>
+            </div>
+            {leads.length === 0 ? (
+              <p className="text-muted-foreground text-sm text-center py-6">Nenhum lead capturado ainda.</p>
+            ) : (
+              <div className="space-y-3">
+                {leads.slice(0, 5).map((l: any) => (
+                  <div key={l.id} className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-info/20 flex items-center justify-center text-xs font-bold text-info">
+                      {l.name.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{l.name}</p>
+                      {l.phone && <p className="text-xs text-muted-foreground">{l.phone}</p>}
+                    </div>
+                    <Badge className={`text-[10px] ${l.status === 'Novo' ? 'bg-info/20 text-info' : l.status === 'Em contato' ? 'bg-warning/20 text-warning' : l.status === 'Convertido' ? 'bg-success/20 text-success' : 'bg-muted text-muted-foreground'}`}>
+                      {l.status}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         <Card className="bg-card border-border">
           <CardContent className="p-4">
             <h2 className="font-heading font-semibold mb-3">Negociações Recentes</h2>

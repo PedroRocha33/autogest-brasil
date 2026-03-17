@@ -13,6 +13,7 @@ import {
   PenTool,
   Settings,
   Lock,
+  Megaphone,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useAuth } from '@/contexts/AuthContext';
@@ -39,6 +40,7 @@ const navSections = [
     items: [
       { title: 'Dashboard', url: '/', icon: LayoutDashboard },
       { title: 'Estoque', url: '/estoque', icon: Car },
+      { title: 'Leads', url: '/leads', icon: Megaphone },
       { title: 'Negociações', url: '/negociacoes', icon: Handshake },
       { title: 'CRM / Clientes', url: '/clientes', icon: Users },
     ],
