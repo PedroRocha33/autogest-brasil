@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Car, DollarSign, Handshake, Wrench, ClipboardCheck, Search, FileText, Plus, Eye, TrendingUp, TrendingDown, Users, Clock, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { Car, DollarSign, Handshake, Wrench, ClipboardCheck, Search, FileText, Plus, Eye, TrendingUp, TrendingDown, Users, Clock, ArrowUpRight, ArrowDownRight, Megaphone } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
 import { useAuth } from '@/contexts/AuthContext';
