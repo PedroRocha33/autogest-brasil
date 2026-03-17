@@ -184,15 +184,18 @@ export default function Dashboard() {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 5);
 
+  const newLeads = leads.filter((l: any) => l.status === 'Novo').length;
+  const totalLeads = leads.length;
+
   const formatCurrency = (v: number) => `R$ ${v.toLocaleString('pt-BR', { minimumFractionDigits: 0 })}`;
 
   const kpis = [
     { label: 'Veículos em Estoque', value: vehiclesAvailable.toString(), subtext: `${totalVehicles} total`, icon: Car, color: 'text-info', trend: null },
     { label: 'Receita do Mês', value: formatCurrency(monthRevenue), subtext: monthProfit >= 0 ? `Lucro: ${formatCurrency(monthProfit)}` : `Prejuízo: ${formatCurrency(monthProfit)}`, icon: DollarSign, color: 'text-success', trend: monthProfit >= 0 ? 'up' : 'down' },
+    { label: 'Leads Novos', value: newLeads.toString(), subtext: `${totalLeads} total`, icon: Megaphone, color: 'text-primary', trend: newLeads > 0 ? 'up' : null },
     { label: 'Negociações Ativas', value: activeDeals.length.toString(), subtext: `Pipeline: ${formatCurrency(pipelineValue)}`, icon: Handshake, color: 'text-warning', trend: null },
     { label: 'Clientes Cadastrados', value: clients.length.toString(), subtext: `${completedDeals.length} vendas realizadas`, icon: Users, color: 'text-primary', trend: null },
     { label: 'Serviços em Andamento', value: activeServices.toString(), subtext: `${services.length} total`, icon: Wrench, color: 'text-info', trend: null },
-    { label: 'Tempo Médio em Estoque', value: `${avgDaysInStock}d`, subtext: `${vehiclesAvailable} veículos`, icon: Clock, color: 'text-warning', trend: null },
   ];
 
   return (
