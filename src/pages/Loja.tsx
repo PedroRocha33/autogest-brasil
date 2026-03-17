@@ -56,7 +56,7 @@ export default function Loja() {
       if (!slug) return;
       const { data: t } = await supabase
         .from('tenants')
-        .select('id, name, phone, address, logo_url')
+        .select('id, name, phone, address, logo_url, banner_url, city')
         .eq('slug', slug)
         .single();
 
