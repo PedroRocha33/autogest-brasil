@@ -108,6 +108,11 @@ export default function Dashboard() {
     enabled: !!tenantId,
   });
 
+  // Computed KPIs
+  const now = new Date();
+  const currentMonth = now.getMonth();
+  const currentYear = now.getFullYear();
+
   const vehiclesAvailable = vehicles.filter(v => v.status === 'Disponível').length;
   const vehiclesNegociando = vehicles.filter(v => v.status === 'Negociando').length;
   const vehiclesSold = vehicles.filter(v => v.status === 'Vendido').length;
