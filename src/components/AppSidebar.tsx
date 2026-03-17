@@ -13,6 +13,7 @@ import {
   PenTool,
   Settings,
   Lock,
+  Megaphone,
 } from 'lucide-react';
 import { NavLink } from '@/components/NavLink';
 import { useAuth } from '@/contexts/AuthContext';
