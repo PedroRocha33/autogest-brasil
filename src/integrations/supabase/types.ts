@@ -319,6 +319,7 @@ export type Database = {
       tenants: {
         Row: {
           address: string | null
+          banner_url: string | null
           city: string | null
           cnpj: string | null
           created_at: string
@@ -332,6 +333,7 @@ export type Database = {
         }
         Insert: {
           address?: string | null
+          banner_url?: string | null
           city?: string | null
           cnpj?: string | null
           created_at?: string
@@ -345,6 +347,7 @@ export type Database = {
         }
         Update: {
           address?: string | null
+          banner_url?: string | null
           city?: string | null
           cnpj?: string | null
           created_at?: string
