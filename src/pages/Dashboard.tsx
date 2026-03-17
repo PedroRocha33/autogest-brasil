@@ -97,10 +97,16 @@ export default function Dashboard() {
     enabled: !!tenantId,
   });
 
-  // Computed KPIs
-  const now = new Date();
-  const currentMonth = now.getMonth();
-  const currentYear = now.getFullYear();
+  // Fetch leads
+  const { data: leads = [] } = useQuery({
+    queryKey: ['dashboard-leads', tenantId],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      const { data } = await supabase.from('leads').select('*').eq('tenant_id', tenantId);
+      return data || [];
+    },
+    enabled: !!tenantId,
+  });
 
   const vehiclesAvailable = vehicles.filter(v => v.status === 'Disponível').length;
   const vehiclesNegociando = vehicles.filter(v => v.status === 'Negociando').length;
