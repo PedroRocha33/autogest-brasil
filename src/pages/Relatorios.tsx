@@ -18,6 +18,48 @@ export default function Relatorios() {
   const [month, setMonth] = useState(String(now.getMonth()));
   const [year, setYear] = useState(String(now.getFullYear()));
 
+  const canView = limits.reports && role !== 'vendedor';
+
+  const { data: deals = [] } = useQuery({
+    queryKey: ['report-deals', tenantId, month, year],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      const { data } = await supabase
+        .from('deals')
+        .select('*, clients(name), vehicles(brand, model, sale_price)')
+        .eq('tenant_id', tenantId)
+        .eq('stage', 'Entregue');
+      return data || [];
+    },
+    enabled: !!tenantId && canView,
+  });
+
+  const { data: commissions = [] } = useQuery({
+    queryKey: ['report-commissions', tenantId, month, year],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      const { data } = await supabase
+        .from('commissions')
+        .select('*')
+        .eq('tenant_id', tenantId);
+      return data || [];
+    },
+    enabled: !!tenantId && canView,
+  });
+
+  const { data: profiles = [] } = useQuery({
+    queryKey: ['report-profiles', tenantId],
+    queryFn: async () => {
+      if (!tenantId) return [];
+      const { data } = await supabase
+        .from('profiles')
+        .select('user_id, name')
+        .eq('tenant_id', tenantId);
+      return data || [];
+    },
+    enabled: !!tenantId && canView,
+  });
+
   if (!limits.reports) {
     return (
       <div className="space-y-6">
@@ -42,46 +84,6 @@ export default function Relatorios() {
       </div>
     );
   }
-
-  const { data: deals = [] } = useQuery({
-    queryKey: ['report-deals', tenantId, month, year],
-    queryFn: async () => {
-      if (!tenantId) return [];
-      const { data } = await supabase
-        .from('deals')
-        .select('*, clients(name), vehicles(brand, model, sale_price)')
-        .eq('tenant_id', tenantId)
-        .eq('stage', 'Entregue');
-      return data || [];
-    },
-    enabled: !!tenantId,
-  });
-
-  const { data: commissions = [] } = useQuery({
-    queryKey: ['report-commissions', tenantId, month, year],
-    queryFn: async () => {
-      if (!tenantId) return [];
-      const { data } = await supabase
-        .from('commissions')
-        .select('*')
-        .eq('tenant_id', tenantId);
-      return data || [];
-    },
-    enabled: !!tenantId,
-  });
-
-  const { data: profiles = [] } = useQuery({
-    queryKey: ['report-profiles', tenantId],
-    queryFn: async () => {
-      if (!tenantId) return [];
-      const { data } = await supabase
-        .from('profiles')
-        .select('user_id, name')
-        .eq('tenant_id', tenantId);
-      return data || [];
-    },
-    enabled: !!tenantId,
-  });
 
   const selectedMonth = parseInt(month);
   const selectedYear = parseInt(year);
