@@ -305,7 +305,36 @@ export default function Dashboard() {
           </CardContent>
         </Card>
 
-        {/* Recent Deals */}
+        {/* Recent Leads */}
+        <Card className="bg-card border-border">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between mb-3">
+              <h2 className="font-heading font-semibold">Leads Recentes</h2>
+              <Button variant="ghost" size="sm" onClick={() => navigate('/leads')}>Ver todos</Button>
+            </div>
+            {leads.length === 0 ? (
+              <p className="text-muted-foreground text-sm text-center py-6">Nenhum lead capturado ainda.</p>
+            ) : (
+              <div className="space-y-3">
+                {leads.slice(0, 5).map((l: any) => (
+                  <div key={l.id} className="flex items-center gap-3">
+                    <div className="h-8 w-8 rounded-full bg-info/20 flex items-center justify-center text-xs font-bold text-info">
+                      {l.name.substring(0, 2).toUpperCase()}
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">{l.name}</p>
+                      {l.phone && <p className="text-xs text-muted-foreground">{l.phone}</p>}
+                    </div>
+                    <Badge className={`text-[10px] ${l.status === 'Novo' ? 'bg-info/20 text-info' : l.status === 'Em contato' ? 'bg-warning/20 text-warning' : l.status === 'Convertido' ? 'bg-success/20 text-success' : 'bg-muted text-muted-foreground'}`}>
+                      {l.status}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
         <Card className="bg-card border-border">
           <CardContent className="p-4">
             <h2 className="font-heading font-semibold mb-3">Negociações Recentes</h2>
