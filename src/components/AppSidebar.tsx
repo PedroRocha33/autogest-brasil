@@ -40,6 +40,7 @@ const navSections = [
     items: [
       { title: 'Dashboard', url: '/', icon: LayoutDashboard },
       { title: 'Estoque', url: '/estoque', icon: Car },
+      { title: 'Leads', url: '/leads', icon: Megaphone },
       { title: 'Negociações', url: '/negociacoes', icon: Handshake },
       { title: 'CRM / Clientes', url: '/clientes', icon: Users },
     ],
