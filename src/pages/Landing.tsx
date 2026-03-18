@@ -3,6 +3,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import {
   Car,
   BarChart3,
   Users,
@@ -15,6 +21,7 @@ import {
   CheckCircle2,
   ArrowRight,
   Star,
+  HelpCircle,
 } from "lucide-react";
 
 const plans = [
@@ -69,6 +76,41 @@ const features = [
   { icon: Wrench, title: "Serviços", desc: "Ordens de serviço com controle de custos e mecânicos" },
   { icon: Globe, title: "Loja Pública", desc: "Vitrine online com seu domínio próprio para atrair clientes" },
   { icon: Shield, title: "Segurança", desc: "Dados isolados por revenda com controle de acesso por perfil" },
+];
+
+const faqs = [
+  {
+    question: "Preciso instalar algum programa?",
+    answer: "Não. O AutoGest funciona 100% no navegador, seja no computador, tablet ou celular. Basta acessar e usar.",
+  },
+  {
+    question: "Posso testar antes de assinar?",
+    answer: "Sim! Oferecemos um período de teste gratuito para você conhecer todas as funcionalidades antes de decidir.",
+  },
+  {
+    question: "Como funciona a loja pública?",
+    answer: "Ao cadastrar seus veículos, eles ficam disponíveis automaticamente em uma vitrine online com a marca da sua revenda. Seus clientes podem ver fotos, detalhes e enviar interesse diretamente por lá.",
+  },
+  {
+    question: "Meus dados estão seguros?",
+    answer: "Sim. Cada revenda tem seus dados completamente isolados. Utilizamos criptografia e controle de acesso por perfil para garantir a segurança das informações.",
+  },
+  {
+    question: "Posso ter mais de um vendedor usando o sistema?",
+    answer: "Sim! No plano Marketplace você pode adicionar múltiplos vendedores, acompanhar o desempenho individual e controlar comissões de cada um.",
+  },
+  {
+    question: "O que é o CarboCarros?",
+    answer: "É o nosso marketplace exclusivo. Seus veículos aparecem para milhares de compradores interessados, aumentando suas chances de venda sem custo extra de anúncio.",
+  },
+  {
+    question: "Consigo controlar despesas e lucro por veículo?",
+    answer: "Sim. O módulo financeiro permite registrar custos de aquisição, serviços realizados e preço de venda, calculando o lucro de cada operação.",
+  },
+  {
+    question: "Como funciona a captura de leads?",
+    answer: "Quando um visitante demonstra interesse por um veículo na sua loja, as informações dele são salvas automaticamente no seu CRM. Você recebe o lead com nome, telefone e veículo de interesse para fazer o follow-up.",
+  },
 ];
 
 export default function Landing() {
@@ -200,8 +242,37 @@ export default function Landing() {
         </div>
       </section>
 
+      {/* FAQ */}
+      <section className="py-16 px-4 bg-card/50" id="faq">
+        <div className="max-w-3xl mx-auto">
+          <div className="text-center mb-10">
+            <div className="h-12 w-12 rounded-xl bg-primary/20 flex items-center justify-center mx-auto mb-4">
+              <HelpCircle className="h-6 w-6 text-primary" />
+            </div>
+            <h2 className="text-3xl font-heading font-bold mb-3">Perguntas frequentes</h2>
+            <p className="text-muted-foreground">Tire suas dúvidas sobre o AutoGest</p>
+          </div>
+          <Accordion type="single" collapsible className="space-y-2">
+            {faqs.map((faq, i) => (
+              <AccordionItem
+                key={i}
+                value={`faq-${i}`}
+                className="border border-border rounded-lg px-5 bg-card data-[state=open]:border-primary/30"
+              >
+                <AccordionTrigger className="text-left font-medium hover:no-underline">
+                  {faq.question}
+                </AccordionTrigger>
+                <AccordionContent className="text-muted-foreground leading-relaxed">
+                  {faq.answer}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </div>
+      </section>
+
       {/* Marketplace CTA */}
-      <section className="py-16 px-4 bg-card/50">
+      <section className="py-16 px-4">
         <div className="max-w-4xl mx-auto text-center space-y-6">
           <div className="h-16 w-16 rounded-2xl bg-primary/20 flex items-center justify-center mx-auto">
             <Globe className="h-8 w-8 text-primary" />
