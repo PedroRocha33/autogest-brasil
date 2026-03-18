@@ -251,7 +251,7 @@ export default function Loja() {
       </section>
 
       {/* Search & Filters — horizontal bar */}
-      <div className="sticky top-[53px] z-40 bg-card/95 backdrop-blur-md border-b border-border">
+      <div className="sticky top-[65px] z-40 bg-card/95 backdrop-blur-md border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
           <div className="flex flex-col sm:flex-row gap-2">
             <div className="relative flex-1">
