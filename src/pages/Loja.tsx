@@ -10,8 +10,9 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/u
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
-import { Search, Phone, MapPin, Car, Fuel, Calendar, Gauge, Settings2, MessageCircle, Send, SlidersHorizontal, Eye } from 'lucide-react';
+import { Search, Phone, MapPin, Car, Fuel, Calendar, Gauge, Settings2, MessageCircle, Send, SlidersHorizontal, Eye, Clock, Mail } from 'lucide-react';
 import PhotoGallery from '@/components/PhotoGallery';
+import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 
 interface Tenant {
