@@ -12,7 +12,6 @@ import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Search, Phone, MapPin, Car, Fuel, Calendar, Gauge, Settings2, MessageCircle, Send, SlidersHorizontal, Eye, Clock, Mail } from 'lucide-react';
 import PhotoGallery from '@/components/PhotoGallery';
-import { Separator } from '@/components/ui/separator';
 import { toast } from 'sonner';
 
 interface Tenant {
