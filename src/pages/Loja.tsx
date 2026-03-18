@@ -315,7 +315,7 @@ export default function Loja() {
       </div>
 
       {/* Vehicle Grid */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
+      <section id="estoque" className="max-w-7xl mx-auto px-4 sm:px-6 pb-16">
         {filtered.length === 0 ? (
           <div className="text-center py-20">
             <Car className="h-10 w-10 text-muted-foreground/30 mx-auto mb-3" />
