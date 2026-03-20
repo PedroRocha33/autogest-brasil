@@ -146,6 +146,10 @@ export default function Loja() {
     );
   }
 
+  const googleMapsQuery = encodeURIComponent(
+    [tenant.address, tenant.city].filter(Boolean).join(', ')
+  );
+
   return (
     <div className="min-h-screen bg-background">
       <PremiumNavbar
@@ -154,7 +158,7 @@ export default function Loja() {
         navItems={[
           { label: "Estoque", onClick: () => document.getElementById('estoque')?.scrollIntoView({ behavior: 'smooth' }) },
           ...(tenant.city || tenant.address ? [{ label: "Localização", onClick: () => document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' }) }] : []),
-          ...(tenant.phone ? [{ label: "Contato", onClick: () => window.open(`tel:+55${tenant.phone!.replace(/\D/g, '')}`) }] : []),
+          ...(tenant.phone ? [{ label: "Contato", onClick: () => document.getElementById('contato')?.scrollIntoView({ behavior: 'smooth' }) }] : []),
         ]}
         ctaLabel={tenant.phone ? "WhatsApp" : undefined}
         ctaHref={tenant.phone ? `https://wa.me/55${tenant.phone.replace(/\D/g, '')}` : undefined}
