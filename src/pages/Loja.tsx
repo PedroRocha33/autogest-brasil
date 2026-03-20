@@ -175,43 +175,16 @@ export default function Loja() {
           <div className="absolute inset-0 bg-gradient-to-b from-primary/5 via-background to-background" />
         )}
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 py-12 md:py-16">
-          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6">
-            <div className="max-w-xl">
-              <p className="text-xs font-medium text-primary uppercase tracking-widest mb-3">
-                {vehicles.length} veículos disponíveis
-              </p>
-              <h2 className="text-3xl md:text-4xl font-heading font-bold leading-[1.15] mb-4">
-                Encontre o carro<br />ideal para você
-              </h2>
-              <p className="text-muted-foreground text-sm max-w-md">
-                Navegue pelo nosso estoque completo. Cada veículo com fotos reais, ficha técnica detalhada e contato direto.
-              </p>
-            </div>
-
-            {/* Location card */}
-            {(tenant.city || tenant.address || tenant.phone) && (
-              <div className="bg-card/80 backdrop-blur-sm border border-border rounded-xl p-4 space-y-2.5 min-w-[260px]">
-                {(tenant.city || tenant.address) && (
-                  <div className="flex items-start gap-2.5">
-                    <MapPin className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Localização</p>
-                      <p className="text-sm font-medium">{tenant.address || tenant.city}</p>
-                      {tenant.address && tenant.city && <p className="text-xs text-muted-foreground">{tenant.city}</p>}
-                    </div>
-                  </div>
-                )}
-                {tenant.phone && (
-                  <div className="flex items-start gap-2.5">
-                    <Phone className="h-4 w-4 text-primary mt-0.5 shrink-0" />
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Contato</p>
-                      <p className="text-sm font-medium">{tenant.phone}</p>
-                    </div>
-                  </div>
-                )}
-              </div>
-            )}
+          <div className="max-w-xl">
+            <p className="text-xs font-medium text-primary uppercase tracking-widest mb-3">
+              {vehicles.length} veículos disponíveis
+            </p>
+            <h2 className="text-3xl md:text-4xl font-heading font-bold leading-[1.15] mb-4">
+              Encontre o carro<br />ideal para você
+            </h2>
+            <p className="text-muted-foreground text-sm max-w-md">
+              Navegue pelo nosso estoque completo. Cada veículo com fotos reais, ficha técnica detalhada e contato direto.
+            </p>
           </div>
         </div>
       </section>
