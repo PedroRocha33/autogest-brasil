@@ -148,57 +148,17 @@ export default function Loja() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navbar */}
-      <header className="border-b border-border bg-card sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo + Name */}
-            <div className="flex items-center gap-3">
-              {tenant.logo_url ? (
-                <img src={tenant.logo_url} alt={tenant.name} className="h-11 w-11 rounded-xl object-cover ring-2 ring-primary/20" />
-              ) : (
-                <div className="h-11 w-11 rounded-xl bg-primary flex items-center justify-center">
-                  <Car className="h-6 w-6 text-primary-foreground" />
-                </div>
-              )}
-              <div className="leading-tight">
-                <h1 className="text-lg font-heading font-bold tracking-tight">{tenant.name}</h1>
-              </div>
-            </div>
-
-            {/* Nav links */}
-            <nav className="hidden md:flex items-center gap-1">
-              <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => document.getElementById('estoque')?.scrollIntoView({ behavior: 'smooth' })}>
-                <Car className="h-4 w-4 mr-1.5" /> Estoque
-              </Button>
-              {tenant.phone && (
-                <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
-                  <a href={`tel:+55${tenant.phone.replace(/\D/g, '')}`}>
-                    <Phone className="h-4 w-4 mr-1.5" /> Ligar
-                  </a>
-                </Button>
-              )}
-              {(tenant.city || tenant.address) && (
-                <Button variant="ghost" size="sm" className="text-muted-foreground">
-                  <MapPin className="h-4 w-4 mr-1.5" /> Localização
-                </Button>
-              )}
-            </nav>
-
-            {/* CTA */}
-            <div className="flex items-center gap-2">
-              {tenant.phone && (
-                <Button asChild size="sm" className="gap-2">
-                  <a href={`https://wa.me/55${tenant.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="h-4 w-4" />
-                    <span className="hidden sm:inline">WhatsApp</span>
-                  </a>
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
+      <PremiumNavbar
+        brand={tenant.name}
+        logoUrl={tenant.logo_url}
+        navItems={[
+          { label: "Estoque", onClick: () => document.getElementById('estoque')?.scrollIntoView({ behavior: 'smooth' }) },
+          ...(tenant.city || tenant.address ? [{ label: "Localização", onClick: () => document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' }) }] : []),
+          ...(tenant.phone ? [{ label: "Contato", onClick: () => window.open(`tel:+55${tenant.phone!.replace(/\D/g, '')}`) }] : []),
+        ]}
+        ctaLabel={tenant.phone ? "WhatsApp" : undefined}
+        ctaHref={tenant.phone ? `https://wa.me/55${tenant.phone.replace(/\D/g, '')}` : undefined}
+      />
 
       {/* Hero — with location */}
       <section className="relative overflow-hidden">
