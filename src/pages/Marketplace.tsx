@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Car, TrendingUp, Shield, Store } from "lucide-react";
 import MarketplaceHeader from "@/components/marketplace/MarketplaceHeader";
+import PremiumFooter from "@/components/shared/PremiumFooter";
 import MarketplaceFilters from "@/components/marketplace/MarketplaceFilters";
 import MarketplaceVehicleCard from "@/components/marketplace/MarketplaceVehicleCard";
 import MarketplaceVehicleDialog from "@/components/marketplace/MarketplaceVehicleDialog";
