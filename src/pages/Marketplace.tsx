@@ -156,8 +156,8 @@ export default function Marketplace() {
     <div className="min-h-screen bg-background">
       <MarketplaceHeader />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border">
+      {/* Hero — extra padding for fixed nav */}
+      <section className="relative overflow-hidden border-b border-border pt-24">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-background to-background" />
         <div className="relative max-w-7xl mx-auto px-4 py-12 md:py-16">
           <h1 className="text-3xl md:text-5xl font-heading font-bold mb-3 tracking-tight">
