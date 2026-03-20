@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Car, TrendingUp, Shield, Store } from "lucide-react";
 import MarketplaceHeader from "@/components/marketplace/MarketplaceHeader";
+import PremiumFooter from "@/components/shared/PremiumFooter";
 import MarketplaceFilters from "@/components/marketplace/MarketplaceFilters";
 import MarketplaceVehicleCard from "@/components/marketplace/MarketplaceVehicleCard";
 import MarketplaceVehicleDialog from "@/components/marketplace/MarketplaceVehicleDialog";
@@ -155,8 +156,8 @@ export default function Marketplace() {
     <div className="min-h-screen bg-background">
       <MarketplaceHeader />
 
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b border-border">
+      {/* Hero — extra padding for fixed nav */}
+      <section className="relative overflow-hidden border-b border-border pt-24">
         <div className="absolute inset-0 bg-gradient-to-br from-primary/8 via-background to-background" />
         <div className="relative max-w-7xl mx-auto px-4 py-12 md:py-16">
           <h1 className="text-3xl md:text-5xl font-heading font-bold mb-3 tracking-tight">
@@ -253,22 +254,20 @@ export default function Marketplace() {
         )}
       </section>
 
-      {/* Footer */}
-      <footer className="border-t border-border bg-card/50">
-        <div className="max-w-7xl mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2.5">
-              <div className="h-7 w-7 rounded-lg bg-primary flex items-center justify-center">
-                <Car className="h-4 w-4 text-primary-foreground" />
-              </div>
-              <span className="font-heading font-bold text-sm">Carbo Carros</span>
-            </div>
-            <p className="text-xs text-muted-foreground">
-              © {new Date().getFullYear()} Carros na região Carbonífera · Powered by AutoGest
-            </p>
-          </div>
-        </div>
-      </footer>
+      <PremiumFooter
+        brand="Carbo Carros"
+        description="O marketplace de veículos da região carbonífera. Compare preços e encontre as melhores ofertas de revendas verificadas."
+        columns={[
+          {
+            title: "Navegação",
+            links: [
+              { label: "Veículos", href: "/marketplace" },
+              { label: "Para Revendas", href: "/landing" },
+            ],
+          },
+        ]}
+        bottomText="Carros na região Carbonífera."
+      />
     </div>
   );
 }

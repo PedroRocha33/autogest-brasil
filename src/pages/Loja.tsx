@@ -11,6 +11,8 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Separator } from '@/components/ui/separator';
 import { Search, Phone, MapPin, Car, Fuel, Calendar, Gauge, Settings2, MessageCircle, Send, SlidersHorizontal, Eye, Clock, Mail } from 'lucide-react';
+import PremiumNavbar from '@/components/shared/PremiumNavbar';
+import PremiumFooter from '@/components/shared/PremiumFooter';
 import PhotoGallery from '@/components/PhotoGallery';
 import { toast } from 'sonner';
 
@@ -146,60 +148,20 @@ export default function Loja() {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* Navbar */}
-      <header className="border-b border-border bg-card sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo + Name */}
-            <div className="flex items-center gap-3">
-              {tenant.logo_url ? (
-                <img src={tenant.logo_url} alt={tenant.name} className="h-11 w-11 rounded-xl object-cover ring-2 ring-primary/20" />
-              ) : (
-                <div className="h-11 w-11 rounded-xl bg-primary flex items-center justify-center">
-                  <Car className="h-6 w-6 text-primary-foreground" />
-                </div>
-              )}
-              <div className="leading-tight">
-                <h1 className="text-lg font-heading font-bold tracking-tight">{tenant.name}</h1>
-              </div>
-            </div>
+      <PremiumNavbar
+        brand={tenant.name}
+        logoUrl={tenant.logo_url}
+        navItems={[
+          { label: "Estoque", onClick: () => document.getElementById('estoque')?.scrollIntoView({ behavior: 'smooth' }) },
+          ...(tenant.city || tenant.address ? [{ label: "Localização", onClick: () => document.getElementById('localizacao')?.scrollIntoView({ behavior: 'smooth' }) }] : []),
+          ...(tenant.phone ? [{ label: "Contato", onClick: () => window.open(`tel:+55${tenant.phone!.replace(/\D/g, '')}`) }] : []),
+        ]}
+        ctaLabel={tenant.phone ? "WhatsApp" : undefined}
+        ctaHref={tenant.phone ? `https://wa.me/55${tenant.phone.replace(/\D/g, '')}` : undefined}
+      />
 
-            {/* Nav links */}
-            <nav className="hidden md:flex items-center gap-1">
-              <Button variant="ghost" size="sm" className="text-muted-foreground" onClick={() => document.getElementById('estoque')?.scrollIntoView({ behavior: 'smooth' })}>
-                <Car className="h-4 w-4 mr-1.5" /> Estoque
-              </Button>
-              {tenant.phone && (
-                <Button variant="ghost" size="sm" className="text-muted-foreground" asChild>
-                  <a href={`tel:+55${tenant.phone.replace(/\D/g, '')}`}>
-                    <Phone className="h-4 w-4 mr-1.5" /> Ligar
-                  </a>
-                </Button>
-              )}
-              {(tenant.city || tenant.address) && (
-                <Button variant="ghost" size="sm" className="text-muted-foreground">
-                  <MapPin className="h-4 w-4 mr-1.5" /> Localização
-                </Button>
-              )}
-            </nav>
-
-            {/* CTA */}
-            <div className="flex items-center gap-2">
-              {tenant.phone && (
-                <Button asChild size="sm" className="gap-2">
-                  <a href={`https://wa.me/55${tenant.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
-                    <MessageCircle className="h-4 w-4" />
-                    <span className="hidden sm:inline">WhatsApp</span>
-                  </a>
-                </Button>
-              )}
-            </div>
-          </div>
-        </div>
-      </header>
-
-      {/* Hero — with location */}
-      <section className="relative overflow-hidden">
+      {/* Hero — with location — extra padding for fixed nav */}
+      <section className="relative overflow-hidden pt-20">
         {tenant.banner_url ? (
           <div className="absolute inset-0">
             <img src={tenant.banner_url} alt="" className="w-full h-full object-cover" />
@@ -251,7 +213,7 @@ export default function Loja() {
       </section>
 
       {/* Search & Filters — horizontal bar */}
-      <div className="sticky top-[65px] z-40 bg-card/95 backdrop-blur-md border-b border-border">
+      <div className="sticky top-0 z-40 bg-card/95 backdrop-blur-md border-b border-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3">
           <div className="flex flex-col sm:flex-row gap-2">
             <div className="relative flex-1">
@@ -519,24 +481,16 @@ export default function Loja() {
         </DialogContent>
       </Dialog>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-8 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            {tenant.logo_url ? (
-              <img src={tenant.logo_url} alt={tenant.name} className="h-5 w-5 rounded object-cover" />
-            ) : (
-              <div className="h-5 w-5 rounded bg-primary/10 flex items-center justify-center">
-                <Car className="h-3 w-3 text-primary" />
-              </div>
-            )}
-            <span className="text-xs font-heading font-semibold">{tenant.name}</span>
-          </div>
-          <p className="text-[11px] text-muted-foreground">
-            © {new Date().getFullYear()} {tenant.name} · Powered by <span className="font-medium text-foreground">AutoGest</span>
-          </p>
-        </div>
-      </footer>
+      <PremiumFooter
+        brand={tenant.name}
+        logoUrl={tenant.logo_url}
+        contactInfo={{
+          phone: tenant.phone,
+          address: tenant.address,
+          city: tenant.city,
+        }}
+        bottomText={`${tenant.name} · Todos os direitos reservados.`}
+      />
     </div>
   );
 }
