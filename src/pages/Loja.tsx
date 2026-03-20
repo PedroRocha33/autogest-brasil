@@ -160,8 +160,8 @@ export default function Loja() {
         ctaHref={tenant.phone ? `https://wa.me/55${tenant.phone.replace(/\D/g, '')}` : undefined}
       />
 
-      {/* Hero — with location */}
-      <section className="relative overflow-hidden">
+      {/* Hero — with location — extra padding for fixed nav */}
+      <section className="relative overflow-hidden pt-20">
         {tenant.banner_url ? (
           <div className="absolute inset-0">
             <img src={tenant.banner_url} alt="" className="w-full h-full object-cover" />
