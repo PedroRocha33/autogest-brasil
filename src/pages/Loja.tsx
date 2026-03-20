@@ -458,6 +458,95 @@ export default function Loja() {
         </DialogContent>
       </Dialog>
 
+      {/* Localização & Contato */}
+      {(tenant.address || tenant.city || tenant.phone) && (
+        <section className="bg-secondary/30 border-t border-border">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+              {/* Mapa */}
+              {(tenant.address || tenant.city) && (
+                <div id="localizacao" className="space-y-4">
+                  <div>
+                    <p className="text-xs font-medium text-primary uppercase tracking-widest mb-1">Localização</p>
+                    <h3 className="text-2xl font-heading font-bold">Onde estamos</h3>
+                  </div>
+                  <div className="rounded-xl overflow-hidden border border-border aspect-[4/3]">
+                    <iframe
+                      title="Localização da loja"
+                      width="100%"
+                      height="100%"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                      src={`https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=${googleMapsQuery}`}
+                    />
+                  </div>
+                  <div className="flex items-start gap-2.5">
+                    <MapPin className="h-4 w-4 text-primary mt-0.5 shrink-0" />
+                    <div>
+                      <p className="text-sm font-medium">{tenant.address || tenant.city}</p>
+                      {tenant.address && tenant.city && <p className="text-xs text-muted-foreground">{tenant.city}</p>}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Contato */}
+              <div id="contato" className="space-y-4">
+                <div>
+                  <p className="text-xs font-medium text-primary uppercase tracking-widest mb-1">Contato</p>
+                  <h3 className="text-2xl font-heading font-bold">Fale conosco</h3>
+                </div>
+                <div className="bg-card border border-border rounded-xl p-6 space-y-5">
+                  {tenant.phone && (
+                    <div className="flex items-start gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <Phone className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Telefone</p>
+                        <a href={`tel:+55${tenant.phone.replace(/\D/g, '')}`} className="text-sm font-semibold hover:text-primary transition-colors">
+                          {tenant.phone}
+                        </a>
+                      </div>
+                    </div>
+                  )}
+                  {(tenant.address || tenant.city) && (
+                    <div className="flex items-start gap-3">
+                      <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                        <MapPin className="h-5 w-5 text-primary" />
+                      </div>
+                      <div>
+                        <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium">Endereço</p>
+                        <p className="text-sm font-semibold">{tenant.address || tenant.city}</p>
+                        {tenant.address && tenant.city && <p className="text-xs text-muted-foreground">{tenant.city}</p>}
+                      </div>
+                    </div>
+                  )}
+                  {tenant.phone && (
+                    <Separator />
+                  )}
+                  {tenant.phone && (
+                    <div className="flex flex-col sm:flex-row gap-2">
+                      <Button className="flex-1" asChild>
+                        <a href={`https://wa.me/55${tenant.phone.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
+                          <MessageCircle className="mr-2 h-4 w-4" />WhatsApp
+                        </a>
+                      </Button>
+                      <Button variant="outline" className="flex-1" asChild>
+                        <a href={`tel:+55${tenant.phone.replace(/\D/g, '')}`}>
+                          <Phone className="mr-2 h-4 w-4" />Ligar agora
+                        </a>
+                      </Button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
       <PremiumFooter
         brand={tenant.name}
         logoUrl={tenant.logo_url}
