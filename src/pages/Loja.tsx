@@ -481,24 +481,16 @@ export default function Loja() {
         </DialogContent>
       </Dialog>
 
-      {/* Footer */}
-      <footer className="border-t border-border py-8 px-4 sm:px-6">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex items-center gap-2">
-            {tenant.logo_url ? (
-              <img src={tenant.logo_url} alt={tenant.name} className="h-5 w-5 rounded object-cover" />
-            ) : (
-              <div className="h-5 w-5 rounded bg-primary/10 flex items-center justify-center">
-                <Car className="h-3 w-3 text-primary" />
-              </div>
-            )}
-            <span className="text-xs font-heading font-semibold">{tenant.name}</span>
-          </div>
-          <p className="text-[11px] text-muted-foreground">
-            © {new Date().getFullYear()} {tenant.name} · Powered by <span className="font-medium text-foreground">AutoGest</span>
-          </p>
-        </div>
-      </footer>
+      <PremiumFooter
+        brand={tenant.name}
+        logoUrl={tenant.logo_url}
+        contactInfo={{
+          phone: tenant.phone,
+          address: tenant.address,
+          city: tenant.city,
+        }}
+        bottomText={`${tenant.name} · Todos os direitos reservados.`}
+      />
     </div>
   );
 }
