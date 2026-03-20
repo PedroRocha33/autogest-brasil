@@ -1,5 +1,4 @@
 import PremiumNavbar from "@/components/shared/PremiumNavbar";
-import PremiumNavbar from "@/components/shared/PremiumNavbar";
 
 export default function MarketplaceHeader() {
   return (
