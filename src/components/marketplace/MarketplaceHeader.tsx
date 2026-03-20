@@ -1,5 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { Car } from "lucide-react";
+import PremiumNavbar from "@/components/shared/PremiumNavbar";
 import PremiumNavbar from "@/components/shared/PremiumNavbar";
 
 export default function MarketplaceHeader() {
