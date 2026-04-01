@@ -103,6 +103,95 @@ export type Database = {
           },
         ]
       }
+      contracts: {
+        Row: {
+          buyer_address: string | null
+          buyer_cpf: string | null
+          buyer_name: string | null
+          client_id: string | null
+          created_at: string
+          deal_id: string | null
+          id: string
+          observations: string | null
+          payment_method: string | null
+          seller_cpf: string | null
+          seller_name: string | null
+          status: string
+          tenant_id: string
+          type: string
+          value: number | null
+          vehicle_description: string | null
+          vehicle_id: string | null
+        }
+        Insert: {
+          buyer_address?: string | null
+          buyer_cpf?: string | null
+          buyer_name?: string | null
+          client_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          observations?: string | null
+          payment_method?: string | null
+          seller_cpf?: string | null
+          seller_name?: string | null
+          status?: string
+          tenant_id: string
+          type?: string
+          value?: number | null
+          vehicle_description?: string | null
+          vehicle_id?: string | null
+        }
+        Update: {
+          buyer_address?: string | null
+          buyer_cpf?: string | null
+          buyer_name?: string | null
+          client_id?: string | null
+          created_at?: string
+          deal_id?: string | null
+          id?: string
+          observations?: string | null
+          payment_method?: string | null
+          seller_cpf?: string | null
+          seller_name?: string | null
+          status?: string
+          tenant_id?: string
+          type?: string
+          value?: number | null
+          vehicle_description?: string | null
+          vehicle_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "contracts_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "contracts_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       deals: {
         Row: {
           accepted_price: number | null
@@ -255,6 +344,133 @@ export type Database = {
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      receipts: {
+        Row: {
+          client_cpf: string | null
+          client_name: string | null
+          created_at: string
+          deal_id: string | null
+          description: string
+          id: string
+          receipt_number: number
+          status: string
+          tenant_id: string
+          value: number
+        }
+        Insert: {
+          client_cpf?: string | null
+          client_name?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description: string
+          id?: string
+          receipt_number?: number
+          status?: string
+          tenant_id: string
+          value: number
+        }
+        Update: {
+          client_cpf?: string | null
+          client_name?: string | null
+          created_at?: string
+          deal_id?: string | null
+          description?: string
+          id?: string
+          receipt_number?: number
+          status?: string
+          tenant_id?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "receipts_deal_id_fkey"
+            columns: ["deal_id"]
+            isOneToOne: false
+            referencedRelation: "deals"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "receipts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      refinanciamentos: {
+        Row: {
+          bank: string | null
+          client_id: string | null
+          created_at: string
+          down_payment: number | null
+          first_due_date: string | null
+          id: string
+          installment_value: number | null
+          installments: number
+          interest_rate: number | null
+          observations: string | null
+          status: string
+          tenant_id: string
+          total_value: number
+          vehicle_id: string | null
+        }
+        Insert: {
+          bank?: string | null
+          client_id?: string | null
+          created_at?: string
+          down_payment?: number | null
+          first_due_date?: string | null
+          id?: string
+          installment_value?: number | null
+          installments?: number
+          interest_rate?: number | null
+          observations?: string | null
+          status?: string
+          tenant_id: string
+          total_value?: number
+          vehicle_id?: string | null
+        }
+        Update: {
+          bank?: string | null
+          client_id?: string | null
+          created_at?: string
+          down_payment?: number | null
+          first_due_date?: string | null
+          id?: string
+          installment_value?: number | null
+          installments?: number
+          interest_rate?: number | null
+          observations?: string | null
+          status?: string
+          tenant_id?: string
+          total_value?: number
+          vehicle_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "refinanciamentos_client_id_fkey"
+            columns: ["client_id"]
+            isOneToOne: false
+            referencedRelation: "clients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "refinanciamentos_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "refinanciamentos_vehicle_id_fkey"
+            columns: ["vehicle_id"]
+            isOneToOne: false
+            referencedRelation: "vehicles"
             referencedColumns: ["id"]
           },
         ]

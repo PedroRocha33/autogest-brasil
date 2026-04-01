@@ -50,8 +50,8 @@ const navSections = [
     items: [
       { title: 'Serviços', url: '/servicos', icon: Wrench },
       { title: 'Vistorias', url: '/vistorias', icon: ClipboardCheck },
-      { title: 'Contratos', url: '#', icon: FileText, disabled: true },
-      { title: 'Refinanciamentos', url: '#', icon: Receipt, disabled: true },
+      { title: 'Contratos', url: '/contratos', icon: FileText },
+      { title: 'Refinanciamentos', url: '/refinanciamentos', icon: Receipt },
       { title: 'Despachante', url: '#', icon: FileText, disabled: true },
     ],
   },
@@ -61,7 +61,7 @@ const navSections = [
       { title: 'Financeiro', url: '/financeiro', icon: DollarSign },
       { title: 'Comissões', url: '/comissoes', icon: BarChart3 },
       { title: 'Relatórios', url: '/relatorios', icon: BarChart3 },
-      { title: 'Nota Fiscal', url: '#', icon: Receipt, disabled: true },
+      { title: 'Nota Fiscal', url: '/nota-fiscal', icon: Receipt },
     ],
   },
   {

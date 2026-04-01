@@ -27,6 +27,9 @@ import Financeiro from "@/pages/Financeiro";
 import Comissoes from "@/pages/Comissoes";
 import Relatorios from "@/pages/Relatorios";
 import Configuracoes from "@/pages/Configuracoes";
+import Contratos from "@/pages/Contratos";
+import Refinanciamentos from "@/pages/Refinanciamentos";
+import NotaFiscal from "@/pages/NotaFiscal";
 import Admin from "@/pages/Admin";
 import NotFound from "@/pages/NotFound";
 
@@ -121,6 +124,21 @@ const App = () => (
             <Route path="/configuracoes" element={
               <ProtectedRoute>
                 <AppLayout><Configuracoes /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/contratos" element={
+              <ProtectedRoute>
+                <AppLayout><Contratos /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/refinanciamentos" element={
+              <ProtectedRoute>
+                <AppLayout><Refinanciamentos /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/nota-fiscal" element={
+              <ProtectedRoute>
+                <AppLayout><NotaFiscal /></AppLayout>
               </ProtectedRoute>
             } />
             
