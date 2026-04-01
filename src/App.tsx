@@ -126,6 +126,21 @@ const App = () => (
                 <AppLayout><Configuracoes /></AppLayout>
               </ProtectedRoute>
             } />
+            <Route path="/contratos" element={
+              <ProtectedRoute>
+                <AppLayout><Contratos /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/refinanciamentos" element={
+              <ProtectedRoute>
+                <AppLayout><Refinanciamentos /></AppLayout>
+              </ProtectedRoute>
+            } />
+            <Route path="/nota-fiscal" element={
+              <ProtectedRoute>
+                <AppLayout><NotaFiscal /></AppLayout>
+              </ProtectedRoute>
+            } />
             
             <Route path="*" element={<NotFound />} />
           </Routes>
