@@ -50,8 +50,8 @@ const navSections = [
     items: [
       { title: 'Serviços', url: '/servicos', icon: Wrench },
       { title: 'Vistorias', url: '/vistorias', icon: ClipboardCheck },
-      { title: 'Contratos', url: '#', icon: FileText, disabled: true },
-      { title: 'Refinanciamentos', url: '#', icon: Receipt, disabled: true },
+      { title: 'Contratos', url: '/contratos', icon: FileText },
+      { title: 'Refinanciamentos', url: '/refinanciamentos', icon: Receipt },
       { title: 'Despachante', url: '#', icon: FileText, disabled: true },
     ],
   },
