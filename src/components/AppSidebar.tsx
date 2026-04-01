@@ -61,7 +61,7 @@ const navSections = [
       { title: 'Financeiro', url: '/financeiro', icon: DollarSign },
       { title: 'Comissões', url: '/comissoes', icon: BarChart3 },
       { title: 'Relatórios', url: '/relatorios', icon: BarChart3 },
-      { title: 'Nota Fiscal', url: '#', icon: Receipt, disabled: true },
+      { title: 'Nota Fiscal', url: '/nota-fiscal', icon: Receipt },
     ],
   },
   {
